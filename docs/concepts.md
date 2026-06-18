@@ -10,7 +10,8 @@
 
 | Concept ID | Name | Description |
 |------------|------|-------------|
-| `CONCEPT:FRSS-001` | System Operations | MCP tool domain `system` — Action-routed dynamic tool registration |
+| `CONCEPT:FRSS-001` | Reader Operations | MCP tool domain `reader` — action-routed stream contents, item bodies, and unread counts via the GReader API |
+| `CONCEPT:FRSS-002` | Subscription Curation | MCP tool domain `subscriptions` — action-routed feed subscribe/unsubscribe/label, categories, and item tagging (read/star) |
 
 ## Cross-Project References (from agent-utilities)
 

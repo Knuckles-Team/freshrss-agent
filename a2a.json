@@ -7,9 +7,14 @@
   "license": "MIT",
   "capabilities": [
     {
-      "id": "run_graph_flow",
-      "name": "Graph Flow Execution",
-      "description": "Execute a workflow through the agent's graph orchestration engine"
+      "id": "read_feeds",
+      "name": "Read RSS Feed Contents",
+      "description": "Fetch stream contents, item bodies, and unread counts from a FreshRSS instance via the Google Reader API"
+    },
+    {
+      "id": "curate_feeds",
+      "name": "Curate RSS Subscriptions",
+      "description": "Subscribe, unsubscribe, label, categorize, mark-read, and star feeds in a FreshRSS instance"
     }
   ],
   "tools": [

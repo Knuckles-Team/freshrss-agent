@@ -1,4 +1,19 @@
-from .api_client_base import ApiClientBase
-from .api_client_system import ApiClientSystem
+from .api_client_base import FreshRSSClientBase
+from .api_client_reader import ReaderMixin
+from .api_client_subscriptions import SubscriptionsMixin
 
-__all__ = ["ApiClientBase", "ApiClientSystem"]
+
+class FreshRSSApi(ReaderMixin, SubscriptionsMixin, FreshRSSClientBase):
+    """FreshRSS GReader API client (reader + subscriptions)."""
+
+
+# Backward-compat alias for the scaffold (auth.py imports ApiClientSystem).
+ApiClientSystem = FreshRSSApi
+
+__all__ = [
+    "FreshRSSApi",
+    "FreshRSSClientBase",
+    "ReaderMixin",
+    "SubscriptionsMixin",
+    "ApiClientSystem",
+]

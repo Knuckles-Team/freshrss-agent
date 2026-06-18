@@ -29,7 +29,8 @@ matching `mcp_config.json` below.
       "args": ["--from", "freshrss-agent", "freshrss-mcp"],
       "env": {
         "FRESHRSS_URL": "https://service.example.com",
-        "FRESHRSS_API_PASSWORD": "your_token"
+        "FRESHRSS_USER": "admin",
+        "FRESHRSS_API_PASSWORD": "your_api_password"
       }
     }
   }
@@ -67,7 +68,8 @@ daemonless runtime):
         "run", "-i", "--rm",
         "-e", "TRANSPORT=stdio",
         "-e", "FRESHRSS_URL=https://service.example.com",
-        "-e", "FRESHRSS_API_PASSWORD=your_token",
+        "-e", "FRESHRSS_USER=admin",
+        "-e", "FRESHRSS_API_PASSWORD=your_api_password",
         "knucklessg1/freshrss-agent:latest"
       ]
     }

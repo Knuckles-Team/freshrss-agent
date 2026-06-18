@@ -8,9 +8,11 @@
       ],
       "env": {
         "FRESHRSS_URL": "<YOUR_FRESHRSS_URL>",
+        "FRESHRSS_USER": "<YOUR_FRESHRSS_USER>",
         "FRESHRSS_API_PASSWORD": "<YOUR_FRESHRSS_API_PASSWORD>",
-        "FRESHRSS_AGENT_SSL_VERIFY": "<YOUR_FRESHRSS_AGENT_SSL_VERIFY>",
-        "SYSTEMTOOL": "True"
+        "FRESHRSS_SSL_VERIFY": "<YOUR_FRESHRSS_SSL_VERIFY>",
+        "READERTOOL": "True",
+        "SUBSCRIPTIONSTOOL": "True"
       }
     }
   }

@@ -5,7 +5,14 @@
 
 ## Description
 
-FreshRSS API + MCP Server + A2A Server
+`freshrss-agent` wraps a self-hosted **FreshRSS** RSS reader through its
+**Google Reader compatible API** (GReader, served at
+`{FRESHRSS_URL}/api/greader.php`). It exposes two action-routed MCP tool domains —
+`freshrss_reader` (stream contents, item bodies, unread counts) and
+`freshrss_subscriptions` (subscribe/unsubscribe/label feeds, browse categories,
+mark items read or starred) — plus a Python API and an A2A agent. The reader's
+`stream_contents` action is consumed directly by the agent-utilities Knowledge
+Graph connector preset to ingest feed items.
 
 ## Architecture
 

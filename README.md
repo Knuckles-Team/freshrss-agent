@@ -21,7 +21,12 @@
 
 **FreshRSS MCP Server + A2A Agent**
 
-FreshRSS API + MCP Server + A2A Server
+A connector for the self-hosted [FreshRSS](https://freshrss.org/) RSS reader,
+wrapping its **Google Reader compatible API** (GReader). It exposes two
+action-routed MCP tool domains:
+
+- **`freshrss_reader`** — `stream_contents` (feed items + continuation), `item_contents`, `unread_count`.
+- **`freshrss_subscriptions`** — `list`, `subscribe`, `unsubscribe`, `label`, `categories`, `mark_read`, `star`.
 
 This repository is actively maintained - Contributions are welcome!
 
@@ -34,8 +39,10 @@ The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
 
 #### Environment Variables
 
-*   `FRESHRSS_URL`: The URL of the target service.
-*   `FRESHRSS_API_PASSWORD`: The API token or access token.
+*   `FRESHRSS_URL`: The base URL of the FreshRSS instance (e.g. `http://freshrss.arpa`).
+*   `FRESHRSS_USER`: The FreshRSS username (GReader `Email` field).
+*   `FRESHRSS_API_PASSWORD`: The FreshRSS **API password** (Settings → Authentication).
+*   `FRESHRSS_SSL_VERIFY`: Whether to verify TLS certificates (default `True`).
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
@@ -47,7 +54,8 @@ The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
       "args": ["--from", "freshrss-agent", "freshrss-mcp"],
       "env": {
         "FRESHRSS_URL": "https://service.example.com",
-        "FRESHRSS_API_PASSWORD": "your_token"
+        "FRESHRSS_USER": "admin",
+        "FRESHRSS_API_PASSWORD": "your_api_password"
       }
     }
   }
@@ -67,7 +75,8 @@ The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
         "HOST": "0.0.0.0",
         "PORT": "8000",
         "FRESHRSS_URL": "https://service.example.com",
-        "FRESHRSS_API_PASSWORD": "your_token"
+        "FRESHRSS_USER": "admin",
+        "FRESHRSS_API_PASSWORD": "your_api_password"
       }
     }
   }

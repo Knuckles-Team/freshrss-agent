@@ -6,12 +6,11 @@ import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
+from agent_utilities.base_utilities import get_logger, to_boolean
 from agent_utilities.mcp_utilities import create_mcp_server
-from agent_utilities.utilities import get_logger
 from dotenv import find_dotenv, load_dotenv
 
-from .mcp import register_system_tools
+from .mcp import register_reader_tools, register_subscriptions_tools
 
 __version__ = "0.1.0"
 
@@ -29,9 +28,13 @@ def get_mcp_instance() -> tuple[Any, Any, Any]:
         instructions="FreshRSS MCP Server — Condensed Action-Routed Tools.",
     )
 
-    DEFAULT_SYSTEMTOOL = to_boolean(os.getenv("SYSTEMTOOL", "True"))
-    if DEFAULT_SYSTEMTOOL:
-        register_system_tools(mcp)
+    DEFAULT_READERTOOL = to_boolean(os.getenv("READERTOOL", "True"))
+    if DEFAULT_READERTOOL:
+        register_reader_tools(mcp)
+
+    DEFAULT_SUBSCRIPTIONSTOOL = to_boolean(os.getenv("SUBSCRIPTIONSTOOL", "True"))
+    if DEFAULT_SUBSCRIPTIONSTOOL:
+        register_subscriptions_tools(mcp)
 
     for mw in middlewares:
         mcp.add_middleware(mw)

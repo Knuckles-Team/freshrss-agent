@@ -38,9 +38,10 @@ def get_client(
         return _client
 
     base_url = url or os.getenv("FRESHRSS_URL", "http://localhost:8080")
-    token = token or os.getenv("FRESHRSS_API_PASSWORD", "")
+    api_password = token or os.getenv("FRESHRSS_API_PASSWORD", "")
+    username = os.getenv("FRESHRSS_USER", "")
     if verify is None:
-        verify = to_boolean(string=os.getenv("FRESHRSS_AGENT_SSL_VERIFY", "True"))
+        verify = to_boolean(string=os.getenv("FRESHRSS_SSL_VERIFY", "True"))
 
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
@@ -63,7 +64,10 @@ def get_client(
                 extra={"user_email": identity.get("email"), "url": base_url},
             )
             _client = ApiClientSystem(
-                base_url=base_url, token=delegated_token, verify=verify
+                base_url=base_url,
+                username=username,
+                api_password=delegated_token,
+                verify=verify,
             )
             return _client
         except Exception as e:
@@ -76,7 +80,12 @@ def get_client(
     # --- Path 2: Fixed Credentials (FRESHRSS_API_PASSWORD) ---
     logger.info("Using fixed credentials")
     try:
-        _client = ApiClientSystem(base_url=base_url, token=token, verify=verify)
+        _client = ApiClientSystem(
+            base_url=base_url,
+            username=username,
+            api_password=api_password,
+            verify=verify,
+        )
     except (AuthError, UnauthorizedError) as e:
         raise RuntimeError(
             f"AUTHENTICATION ERROR: The credentials provided are not valid for '{base_url}'. "

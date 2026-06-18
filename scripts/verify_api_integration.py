@@ -9,6 +9,7 @@ BASELINES = {
     "ansible-tower-mcp": 94.7,
     "archivebox-api": 85.7,
     "documentdb-mcp": 100.0,
+    "freshrss-agent": 0.0,
     "github-agent": 100.0,
     "gitlab-api": 6.4,
     "home-assistant-agent": 63.6,
