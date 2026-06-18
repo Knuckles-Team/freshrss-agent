@@ -5,7 +5,9 @@ import freshrss_agent.auth as auth_module
 from freshrss_agent.auth import get_client
 
 
+@pytest.mark.concept("FRSS-001")
 def test_get_client_auth_error():
+    """CONCEPT:FRSS-001 get_client raises a friendly RuntimeError on bad credentials."""
     auth_module._client = None
     with patch("freshrss_agent.auth.ApiClientSystem") as mock_client_cls:
         mock_client_cls.side_effect = Exception("Auth Failure")

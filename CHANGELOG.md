@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `concept(id)` pytest marker registration and `@pytest.mark.concept` traceability
+  markers (plus `CONCEPT:FRSS-*` docstrings) on all test functions.
+- README Table of Contents, Key Features, Available MCP Tools table, Usage examples,
+  expanded Installation, and a Documentation section linking the `docs/` material.
+
 ## [0.1.0] - 2026-06-18
 
 ### Added

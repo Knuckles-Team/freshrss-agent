@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from freshrss_agent.api import FreshRSSApi
 
 
@@ -11,7 +13,9 @@ def _client():
     )
 
 
+@pytest.mark.concept("FRSS-001")
 def test_client_login_parses_auth_token():
+    """CONCEPT:FRSS-001 GReader ClientLogin parses the Auth token from the response."""
     client = _client()
     login_resp = MagicMock(status_code=200)
     login_resp.text = "SID=abc\nLSID=def\nAuth=THE_TOKEN\n"
@@ -24,7 +28,9 @@ def test_client_login_parses_auth_token():
     assert kwargs["data"] == {"Email": "admin", "Passwd": "pw"}
 
 
+@pytest.mark.concept("FRSS-001")
 def test_stream_contents_parses_items_and_continuation():
+    """CONCEPT:FRSS-001 stream_contents maps GReader params and parses items."""
     client = _client()
     client._auth_token = "TKN"  # skip login
     payload = {
@@ -57,7 +63,9 @@ def test_stream_contents_parses_items_and_continuation():
     assert kwargs["headers"]["Authorization"] == "GoogleLogin auth=TKN"
 
 
+@pytest.mark.concept("FRSS-001")
 def test_request_reauths_once_on_401():
+    """CONCEPT:FRSS-001 request re-runs ClientLogin once and retries on HTTP 401."""
     client = _client()
     client._auth_token = "STALE"
     unauthorized = MagicMock(status_code=401)
