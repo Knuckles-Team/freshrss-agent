@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Subscription, category and tagging operations for the FreshRSS GReader API."""
 
 from typing import Any

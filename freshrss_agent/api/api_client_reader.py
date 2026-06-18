@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """Reader operations for the FreshRSS GReader API (stream contents, item bodies)."""
 
 from typing import Any

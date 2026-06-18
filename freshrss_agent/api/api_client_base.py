@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """GReader (Google Reader compatible) HTTP base client for FreshRSS."""
 
 import logging
@@ -26,12 +25,12 @@ class FreshRSSClientBase:
 
     def __init__(
         self,
-        base_url: str,
-        username: str,
-        api_password: str,
+        base_url: str | None,
+        username: str | None,
+        api_password: str | None,
         verify: bool = True,
     ):
-        self.base_url = base_url.rstrip("/")
+        self.base_url = (base_url or "").rstrip("/")
         self.username = username or ""
         self.api_password = api_password or ""
         self.verify = verify

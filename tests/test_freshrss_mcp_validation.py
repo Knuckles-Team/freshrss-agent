@@ -8,7 +8,7 @@ def test_mcp_instance_registers_reader_and_subscriptions(monkeypatch):
     mcp, args, middlewares = get_mcp_instance()
     assert mcp is not None
 
-    tools = asyncio.run(mcp.get_tools())
-    tool_names = set(tools.keys())
+    tools = asyncio.run(mcp.list_tools())
+    tool_names = {tool.name for tool in tools}
     assert "freshrss_reader" in tool_names
     assert "freshrss_subscriptions" in tool_names

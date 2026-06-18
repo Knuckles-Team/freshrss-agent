@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# coding: utf-8
 """MCP tools for FreshRSS subscription, category and tagging operations."""
 
 import json
