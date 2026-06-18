@@ -32,11 +32,27 @@ class ReaderMixin:
             params["ot"] = int(newer_than)
         if continuation:
             params["c"] = continuation
-        return self.request(
+        result = self.request(
             "GET",
             f"reader/api/0/stream/contents/{stream_id}",
             params=params,
         )
+        # Normalize each item to flat, transport-safe top-level fields so a KG
+        # connector reads ``text`` directly (a nested ``summary.content`` field-map
+        # does not survive the MCP structured-output round-trip reliably). The raw
+        # GReader fields (origin/categories/canonical) are preserved alongside.
+        if isinstance(result, dict) and isinstance(result.get("items"), list):
+            for item in result["items"]:
+                if not isinstance(item, dict):
+                    continue
+                body = (item.get("summary") or {}).get("content") or (
+                    item.get("content") or {}
+                ).get("content") or ""
+                item["text"] = body
+                canonical = item.get("canonical") or []
+                if isinstance(canonical, list) and canonical:
+                    item["url"] = canonical[0].get("href", "")
+        return result
 
     def item_contents(self, item_ids: list[str] | str) -> dict[str, Any]:
         """Fetch full contents for specific item ids (GReader ``i`` parameters)."""
