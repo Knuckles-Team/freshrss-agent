@@ -1,14 +1,19 @@
 #!/usr/bin/python
 
 import logging
-import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import get_logger, to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server, load_config
+from agent_utilities.base_utilities import get_logger
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    load_config,
+    register_tool_surface,
+)
 
-from .mcp import register_reader_tools, register_subscriptions_tools
+from .api import ApiClientSystem
+from .auth import get_client
+from .mcp import register_reader_tools, register_subscriptions_tools  # noqa: F401
 
 __version__ = "0.1.0"
 
@@ -26,13 +31,13 @@ def get_mcp_instance() -> tuple[Any, Any, Any]:
         instructions="FreshRSS MCP Server — Condensed Action-Routed Tools.",
     )
 
-    DEFAULT_READERTOOL = to_boolean(os.getenv("READERTOOL", "True"))
-    if DEFAULT_READERTOOL:
-        register_reader_tools(mcp)
-
-    DEFAULT_SUBSCRIPTIONSTOOL = to_boolean(os.getenv("SUBSCRIPTIONSTOOL", "True"))
-    if DEFAULT_SUBSCRIPTIONSTOOL:
-        register_subscriptions_tools(mcp)
+    register_tool_surface(
+        mcp,
+        client_cls=ApiClientSystem,
+        get_client=get_client,
+        service="freshrss-agent",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)

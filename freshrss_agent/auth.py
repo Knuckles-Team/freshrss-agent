@@ -14,9 +14,8 @@ to ``(url, token, verify)`` and call it here before the delegation/fixed paths â
 ``gitlab_api.instances`` (CONCEPT:KG-2.9g) for the golden pattern.
 """
 
-import os
-
-from agent_utilities.base_utilities import get_logger, to_boolean
+from agent_utilities.base_utilities import get_logger
+from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
 
 from .api import ApiClientSystem
@@ -36,11 +35,11 @@ def get_client(
     if _client is not None:
         return _client
 
-    base_url = url or os.getenv("FRESHRSS_URL", "http://localhost:8080")
-    api_password = token or os.getenv("FRESHRSS_API_PASSWORD", "")
-    username = os.getenv("FRESHRSS_USER", "")
+    base_url = url or setting("FRESHRSS_URL", "http://localhost:8080")
+    api_password = token or setting("FRESHRSS_API_PASSWORD", "")
+    username = setting("FRESHRSS_USER", "")
     if verify is None:
-        verify = to_boolean(string=os.getenv("FRESHRSS_SSL_VERIFY", "True"))
+        verify = setting("FRESHRSS_SSL_VERIFY", True)
 
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
