@@ -64,13 +64,17 @@ This repository is actively maintained - Contributions are welcome!
 
 ### Available MCP Tools
 
-This server uses dynamic Action-Routed tools to optimize token overhead and maximize
-IDE compatibility. Each tool takes an `action` plus a `params_json` payload.
+_Auto-generated from the live MCP server — do not edit by hand._
 
-| Tool Module | Toggle Env Var | Enabled by Default | Description & Action-Routed Methods |
-|-------------|----------------|--------------------|-------------------------------------|
-| **Reader** | `READERTOOL` | `True` | Read FreshRSS streams via the GReader API. Action-routed methods: `stream_contents`, `item_contents`, `unread_count`. |
-| **Subscriptions** | `SUBSCRIPTIONSTOOL` | `True` | Curate feeds, categories, and item tags. Action-routed methods: `list`, `subscribe`, `unsubscribe`, `label`, `categories`, `mark_read`, `star`. |
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FRSS-001 |
+| `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FRSS-002 |
+
+_2 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in
 [docs/usage.md](docs/usage.md).
