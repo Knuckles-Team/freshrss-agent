@@ -28,6 +28,12 @@ test = [
 freshrss-mcp = "freshrss_agent.mcp_server:mcp_server"
 freshrss-agent = "freshrss_agent.agent_server:agent_server"
 
+[project.entry-points."agent_utilities.skill_providers"]
+freshrss-agent = "freshrss_agent.skills"
+
+[project.entry-points."agent_utilities.prompt_providers"]
+freshrss-agent = "freshrss_agent.prompts"
+
 [tool.setuptools]
 include-package-data = true
 
@@ -46,7 +52,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-freshrss_agent = [ "mcp_config.json", "agent_data/**",]
+freshrss_agent = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
