@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   freshrss-agent-mcp:
-    image: knucklessg1/freshrss-agent:latest
+    image: knucklessg1/freshrss-agent:mcp
     container_name: freshrss-agent-mcp
     hostname: freshrss-agent-mcp
     restart: always
