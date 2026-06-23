@@ -52,7 +52,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-freshrss_agent = [ "mcp_config.json", "agent_data/**", "prompts/**", "skills/**",]
+freshrss_agent = [ "mcp_config.json", "prompts/**", "skills/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
