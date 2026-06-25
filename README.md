@@ -62,6 +62,14 @@ This repository is actively maintained - Contributions are welcome!
 
 ## MCP
 
+> **Install the slim `[mcp]` extra.** All MCP examples below install
+> `freshrss-agent[mcp]` — the MCP-server extra that pulls only the FastMCP /
+> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
+> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> (see [Installation](#installation)).
+
 ### Available MCP Tools
 
 _Auto-generated from the live MCP server — do not edit by hand._
@@ -81,13 +89,38 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 
 ### Environment Variables
 
-The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
-`sse` mode.
+Every variable the server reads. A copy-paste template lives in [`.env.example`](.env.example).
 
-*   `FRESHRSS_URL`: The base URL of the FreshRSS instance (e.g. `http://freshrss.arpa`).
-*   `FRESHRSS_USER`: The FreshRSS username (GReader `Email` field).
-*   `FRESHRSS_API_PASSWORD`: The FreshRSS **API password** (Settings → Authentication).
-*   `FRESHRSS_SSL_VERIFY`: Whether to verify TLS certificates (default `True`).
+**Connection & Credentials**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FRESHRSS_URL` | Base URL of the FreshRSS instance (e.g. `http://freshrss.arpa`) | `http://localhost:8080` |
+| `FRESHRSS_USER` | FreshRSS username (GReader `Email` field) | — |
+| `FRESHRSS_API_PASSWORD` | FreshRSS **API password** (Settings → Authentication) | — |
+| `FRESHRSS_SSL_VERIFY` | Whether to verify TLS certificates | `True` |
+
+**MCP server / transport**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TRANSPORT` | `stdio`, `streamable-http`, or `sse` | `stdio` |
+| `HOST` | Bind host (HTTP transports) | `0.0.0.0` |
+| `PORT` | Bind port (HTTP transports) | `8000` |
+| `MCP_TOOL_MODE` | Tool surface: `condensed`, `verbose`, or `both` | `condensed` |
+
+**Telemetry & governance**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ENABLE_OTEL` | Enable OpenTelemetry / Langfuse export | `True` |
+| `EUNOMIA_TYPE` | Authorization mode: `none`, `embedded`, `remote` | `none` |
+| `EUNOMIA_POLICY_FILE` | Embedded policy file | `mcp_policies.json` |
+| `EUNOMIA_REMOTE_URL` | Remote Eunomia server URL | — |
+
+**Tool toggles** — each action-routed tool domain can be disabled via its toggle env var
+(set to `false`): `READERTOOL`, `SUBSCRIPTIONSTOOL` (see the
+[Available MCP Tools](#available-mcp-tools) table above).
 
 #### stdio Transport (local IDEs - Cursor, Claude Desktop, VS Code)
 
@@ -96,7 +129,7 @@ The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
   "mcpServers": {
     "freshrss-mcp": {
       "command": "uvx",
-      "args": ["--from", "freshrss-agent", "freshrss-mcp"],
+      "args": ["--from", "freshrss-agent[mcp]", "freshrss-mcp"],
       "env": {
         "FRESHRSS_URL": "https://service.example.com",
         "FRESHRSS_USER": "admin",
@@ -114,7 +147,7 @@ The MCP Server can be run in `stdio` (local), `streamable-http` (networked), or
   "mcpServers": {
     "freshrss-mcp": {
       "command": "uvx",
-      "args": ["--from", "freshrss-agent", "freshrss-mcp", "--transport", "streamable-http", "--port", "8000"],
+      "args": ["--from", "freshrss-agent[mcp]", "freshrss-mcp", "--transport", "streamable-http", "--port", "8000"],
       "env": {
         "TRANSPORT": "streamable-http",
         "HOST": "0.0.0.0",
@@ -176,12 +209,23 @@ listing every valid action for that domain.
 
 ## Installation
 
-```bash
-# Using uv (recommended)
-uv pip install freshrss-agent
+Pick the extra that matches what you want to run:
 
-# Using standard pip
-python -m pip install freshrss-agent
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `freshrss-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `freshrss-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `freshrss-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
+
+```bash
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "freshrss-agent[mcp]"
+
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "freshrss-agent[agent]"
+
+# Everything (development)
+uv pip install "freshrss-agent[all]"      # or: python -m pip install "freshrss-agent[all]"
 ```
 
 After installation two console scripts are available:
@@ -190,6 +234,33 @@ After installation two console scripts are available:
 freshrss-mcp      # run the MCP server
 freshrss-agent    # run the A2A agent server
 ```
+
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/freshrss-agent:mcp` | `--target mcp` | `freshrss-agent[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `freshrss-mcp` |
+| `knucklessg1/freshrss-agent:latest` | `--target agent` (default) | `freshrss-agent[agent]` — **full** agent runtime + epistemic-graph engine | `freshrss-agent` |
+
+```bash
+docker build --target mcp   -t knucklessg1/freshrss-agent:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/freshrss-agent:latest docker/   # full agent
+```
+
+`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
+agent (`:latest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
 
 ## Documentation
 
