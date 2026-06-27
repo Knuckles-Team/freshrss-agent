@@ -76,12 +76,34 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 <!-- MCP-TOOLS-TABLE:START -->
 
+#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FRSS-001 |
 | `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FRSS-002 |
 
-_2 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>10 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `freshrss_categories` | `SUBSCRIPTIONS_MIXINTOOL` | List categories / tags (``tag/list``). |
+| `freshrss_item_contents` | `READER_MIXINTOOL` | Fetch full contents for specific item ids (GReader ``i`` parameters). |
+| `freshrss_label` | `SUBSCRIPTIONS_MIXINTOOL` | Add a category label to an existing feed subscription. |
+| `freshrss_mark_read` | `SUBSCRIPTIONS_MIXINTOOL` | Mark one or more items as read. |
+| `freshrss_star` | `SUBSCRIPTIONS_MIXINTOOL` | Star or unstar an item. |
+| `freshrss_stream_contents` | `READER_MIXINTOOL` | Fetch items for a stream. |
+| `freshrss_subscribe` | `SUBSCRIPTIONS_MIXINTOOL` | Subscribe to a feed, optionally setting its title and category. |
+| `freshrss_subscription_list` | `SUBSCRIPTIONS_MIXINTOOL` | List all feed subscriptions. |
+| `freshrss_unread_count` | `READER_MIXINTOOL` | Return unread counts per stream. |
+| `freshrss_unsubscribe` | `SUBSCRIPTIONS_MIXINTOOL` | Unsubscribe from a feed. |
+
+</details>
+
+_2 action-routed tool(s) (default) · 10 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in

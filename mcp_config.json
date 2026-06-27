@@ -7,6 +7,7 @@
         "freshrss-mcp"
       ],
       "env": {
+        "MCP_TOOL_MODE": "condensed",
         "FRESHRSS_URL": "<YOUR_FRESHRSS_URL>",
         "FRESHRSS_USER": "<YOUR_FRESHRSS_USER>",
         "FRESHRSS_API_PASSWORD": "<YOUR_FRESHRSS_API_PASSWORD>",
