@@ -45,9 +45,11 @@ class ReaderMixin:
             for item in result["items"]:
                 if not isinstance(item, dict):
                     continue
-                body = (item.get("summary") or {}).get("content") or (
-                    item.get("content") or {}
-                ).get("content") or ""
+                body = (
+                    (item.get("summary") or {}).get("content")
+                    or (item.get("content") or {}).get("content")
+                    or ""
+                )
                 item["text"] = body
                 canonical = item.get("canonical") or []
                 if isinstance(canonical, list) and canonical:
