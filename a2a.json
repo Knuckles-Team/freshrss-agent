@@ -1,7 +1,7 @@
 {
   "name": "freshrss-agent-agent",
   "type": "agent",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "FreshRSS API + MCP Server + A2A Server",
   "url": "https://github.com/Knuckles-Team/freshrss-agent/tree/main",
   "license": "MIT",

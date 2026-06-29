@@ -15,7 +15,7 @@ from .api import ApiClientSystem
 from .auth import get_client
 from .mcp import register_reader_tools, register_subscriptions_tools  # noqa: F401
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 logger = get_logger(name="MCP_Server")
 logger.setLevel(logging.INFO)
