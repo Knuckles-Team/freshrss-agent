@@ -191,18 +191,35 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
 (set to `false`): `READERTOOL`, `SUBSCRIPTIONSTOOL` (see the
 [Available MCP Tools](#available-mcp-tools) table above).
 
-#### stdio Transport (local IDEs - Cursor, Claude Desktop, VS Code)
+### MCP Configuration Examples
+
+<!-- MCP-CONFIG-EXAMPLES:START -->
+
+> **Install the slim `[mcp]` extra.** All examples install `freshrss-agent[mcp]` — the
+> MCP-server extra that pulls only the FastMCP / FastAPI tooling (`agent-utilities[mcp]`).
+> It deliberately **excludes** the heavy agent runtime (`pydantic-ai`, the epistemic-graph
+> engine, `dspy`, `llama-index`), so `uvx` / container installs are far smaller. Use the
+> full `[agent]` extra only when you need the integrated Pydantic AI agent.
+
+#### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
 ```json
 {
   "mcpServers": {
     "freshrss-mcp": {
       "command": "uvx",
-      "args": ["--from", "freshrss-agent[mcp]", "freshrss-mcp"],
+      "args": [
+        "--from",
+        "freshrss-agent[mcp]",
+        "freshrss-mcp"
+      ],
       "env": {
-        "FRESHRSS_URL": "https://service.example.com",
+        "MCP_TOOL_MODE": "condensed",
+        "FRESHRSS_API_PASSWORD": "your_api_password_here",
+        "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
-        "FRESHRSS_API_PASSWORD": "your_api_password"
+        "READERTOOL": "True",
+        "SUBSCRIPTIONSTOOL": "True"
       }
     }
   }
@@ -216,19 +233,63 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
   "mcpServers": {
     "freshrss-mcp": {
       "command": "uvx",
-      "args": ["--from", "freshrss-agent[mcp]", "freshrss-mcp", "--transport", "streamable-http", "--port", "8000"],
+      "args": [
+        "--from",
+        "freshrss-agent[mcp]",
+        "freshrss-mcp",
+        "--transport",
+        "streamable-http",
+        "--port",
+        "8000"
+      ],
       "env": {
         "TRANSPORT": "streamable-http",
         "HOST": "0.0.0.0",
         "PORT": "8000",
-        "FRESHRSS_URL": "https://service.example.com",
+        "MCP_TOOL_MODE": "condensed",
+        "FRESHRSS_API_PASSWORD": "your_api_password_here",
+        "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
-        "FRESHRSS_API_PASSWORD": "your_api_password"
+        "READERTOOL": "True",
+        "SUBSCRIPTIONSTOOL": "True"
       }
     }
   }
 }
 ```
+
+Alternatively, connect to a pre-deployed Streamable-HTTP instance by `url`:
+
+```json
+{
+  "mcpServers": {
+    "freshrss-mcp": {
+      "url": "http://localhost:8000/freshrss-mcp/mcp"
+    }
+  }
+}
+```
+
+Deploying the Streamable-HTTP server via Docker:
+
+```bash
+docker run -d \
+  --name freshrss-mcp-mcp \
+  -p 8000:8000 \
+  -e TRANSPORT=streamable-http \
+  -e HOST=0.0.0.0 \
+  -e PORT=8000 \
+  -e MCP_TOOL_MODE=condensed \
+  -e FRESHRSS_API_PASSWORD=your_api_password_here \
+  -e FRESHRSS_URL=http://localhost:8080 \
+  -e FRESHRSS_USER=admin \
+  -e READERTOOL=True \
+  -e SUBSCRIPTIONSTOOL=True \
+  knucklessg1/freshrss-agent:mcp
+```
+
+_Auto-generated from the code-read env surface (`MCP_TOOL_MODE` + package vars) — do not edit._
+<!-- MCP-CONFIG-EXAMPLES:END -->
 
 <!-- BEGIN GENERATED: additional-deployment-options -->
 ### Additional Deployment Options

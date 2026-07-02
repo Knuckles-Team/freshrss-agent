@@ -8,10 +8,9 @@
       ],
       "env": {
         "MCP_TOOL_MODE": "condensed",
-        "FRESHRSS_URL": "<YOUR_FRESHRSS_URL>",
-        "FRESHRSS_USER": "<YOUR_FRESHRSS_USER>",
-        "FRESHRSS_API_PASSWORD": "<YOUR_FRESHRSS_API_PASSWORD>",
-        "FRESHRSS_SSL_VERIFY": "<YOUR_FRESHRSS_SSL_VERIFY>",
+        "FRESHRSS_API_PASSWORD": "your_api_password_here",
+        "FRESHRSS_URL": "http://localhost:8080",
+        "FRESHRSS_USER": "admin",
         "READERTOOL": "True",
         "SUBSCRIPTIONSTOOL": "True"
       }
