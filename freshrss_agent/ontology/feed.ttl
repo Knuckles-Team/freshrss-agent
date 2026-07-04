@@ -53,3 +53,20 @@
     presets→KG materialization: a feed is a KG node, not just config.""" ;
     rdfs:subClassOf :DataConnector .
 
+:FeedSubscription a owl:Class ;
+    rdfs:label "Feed Subscription" ;
+    rdfs:comment "CONCEPT:KG-2.122 — a FreshRSS GReader feed subscription (a feed/<url> stream the account follows), ingested natively by the freshrss-agent connector as a typed FeedSource node carrying its title and site URL." ;
+    rdfs:seeAlso schema:DataFeed ;
+    rdfs:subClassOf :FeedSource .
+
+:FeedCategory a owl:Class ;
+    rdfs:label "Feed Category" ;
+    rdfs:comment "CONCEPT:KG-2.122 — a FreshRSS category / label / folder (user/-/label/<cat>) grouping feed subscriptions; ingested as a typed node linked from its member subscriptions via :inCategory." ;
+    rdfs:seeAlso skos:Concept .
+
+:inCategory a owl:ObjectProperty ;
+    rdfs:label "in category" ;
+    rdfs:comment "CONCEPT:KG-2.122 — the FeedCategory a FeedSubscription is filed under (the IN_CATEGORY edge written by the freshrss-agent native ingest)." ;
+    rdfs:domain :FeedSubscription ;
+    rdfs:range :FeedCategory .
+

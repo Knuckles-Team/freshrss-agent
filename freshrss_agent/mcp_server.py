@@ -13,7 +13,11 @@ from agent_utilities.mcp_utilities import (
 
 from .api import ApiClientSystem
 from .auth import get_client
-from .mcp import register_reader_tools, register_subscriptions_tools  # noqa: F401
+from .mcp import (  # noqa: F401
+    register_ingest_tools,
+    register_reader_tools,
+    register_subscriptions_tools,
+)
 
 __version__ = "1.0.1"
 

@@ -1,0 +1,18 @@
+{
+  "_comment": "Tier-1 mcp_tool source presets for freshrss-agent (AU-KG.ingest.mcp-tool-connector). Syncs FreshRSS feed items into the KG as documents via the freshrss-agent MCP server's reader tool. Contributed presets win over the central MCP_TOOL_PRESETS.",
+  "freshrss-feed-items": {
+    "server": "freshrss-agent",
+    "tool": "freshrss_reader",
+    "action": "stream_contents",
+    "records_path": "items",
+    "id_field": "id",
+    "title_field": "title",
+    "text_field": "text",
+    "updated_field": "updated",
+    "url_field": "url",
+    "continuation_path": "continuation",
+    "pagination": "cursor",
+    "cursor_param": "continuation",
+    "doc_type": "feed_item"
+  }
+}

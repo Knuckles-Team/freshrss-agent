@@ -37,6 +37,9 @@ freshrss-agent = "freshrss_agent.prompts"
 [project.entry-points."agent_utilities.ontology_providers"]
 freshrss-agent = "freshrss_agent.ontology"
 
+[project.entry-points."agent_utilities.source_connector_providers"]
+freshrss-agent = "freshrss_agent.connectors"
+
 [tool.setuptools]
 include-package-data = true
 
@@ -55,7 +58,7 @@ dev = [
 ]
 
 [tool.setuptools.package-data]
-freshrss_agent = [ "mcp_config.json", "prompts/**", "skills/**", "ontology/**",]
+freshrss_agent = [ "mcp_config.json", "prompts/**", "skills/**", "ontology/**", "connectors/**",]
 
 [tool.ruff.lint]
 select = [ "E", "F", "I", "UP", "B",]
