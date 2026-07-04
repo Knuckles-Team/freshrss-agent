@@ -80,8 +80,8 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FRSS-001 |
-| `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FRSS-002 |
+| `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FR-OS.identity.frss |
+| `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FR-OS.governance.frss |
 
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
 

@@ -29,7 +29,7 @@ def register_subscriptions_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Curate FreshRSS feeds, categories and item tags. CONCEPT:FRSS-002
+        """Curate FreshRSS feeds, categories and item tags. CONCEPT:FR-OS.governance.frss
 
         Manage subscriptions (``subscribe``/``unsubscribe``/``label``), browse
         ``list``/``categories``, and tag items (``mark_read``/``star``). Write

@@ -28,7 +28,7 @@ def register_reader_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Read FreshRSS streams via the Google Reader API. CONCEPT:FRSS-001
+        """Read FreshRSS streams via the Google Reader API. CONCEPT:FR-OS.identity.frss
 
         ``stream_contents`` accepts ``stream_id``, ``count``, ``order``,
         ``newer_than`` (a unix-seconds delta watermark mapped to GReader ``ot``)
