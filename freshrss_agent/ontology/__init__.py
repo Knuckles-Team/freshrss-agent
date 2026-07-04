@@ -1,4 +1,4 @@
-"""Feed ontology contribution (CONCEPT:KG-2.325).
+"""Feed ontology contribution (CONCEPT:AU-KG.ontology.package-federation-migration).
 
 Data-only subpackage: it carries ``feed.ttl`` (the ``owl:Ontology``
 ``http://knuckles.team/kg/feed`` module — feed sources, RSS feeds, feed items
