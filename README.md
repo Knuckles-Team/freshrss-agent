@@ -401,3 +401,25 @@ Full installation, deployment, usage, and platform-provisioning guides live in t
 - [Overview](docs/overview.md) · [Installation](docs/installation.md) ·
   [Usage](docs/usage.md) · [Deployment](docs/deployment.md) ·
   [Platform](docs/platform.md) · [Concepts](docs/concepts.md)
+
+
+<!-- BEGIN agent-os-genesis-deploy (generated; do not edit between markers) -->
+
+## Deploy with `agent-os-genesis`
+
+This package can be provisioned for you — skill-guided — by the **`agent-os-genesis`**
+universal skill (its *single-package deploy mode*): it picks your install method, seeds
+secrets to OpenBao/Vault (or `.env`), trusts your enterprise CA, registers the MCP
+server, and verifies it — the same machinery that stands up the whole Agent OS, narrowed
+to just this package. Ask your agent to **"deploy `freshrss-agent` with agent-os-genesis"**.
+
+| Install mode | Command |
+|------|---------|
+| Bare-metal, prod (PyPI) | `uvx freshrss-mcp` · or `uv tool install freshrss-agent` |
+| Bare-metal, dev (editable) | `uv pip install -e ".[all]"` · or `pip install -e ".[all]"` |
+| Container, prod | deploy `knucklessg1/freshrss-agent:latest` via docker-compose / swarm / podman / podman-compose / kubernetes |
+| Container, dev (editable) | deploy `docker/compose.dev.yml` (source-mounted at `/src`; edits live on restart) |
+
+Secrets are read-existing + seeded via `vault_sync` — you are only prompted for what's missing.
+
+<!-- END agent-os-genesis-deploy -->
