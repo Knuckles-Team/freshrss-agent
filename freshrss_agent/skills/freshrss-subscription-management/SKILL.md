@@ -1,5 +1,6 @@
 ---
 name: freshrss-subscription-management
+skill_type: skill
 description: >-
   Curate FreshRSS feeds, categories, and item tags over the Google Reader
   (GReader) API via the freshrss-agent MCP server — list subscriptions and

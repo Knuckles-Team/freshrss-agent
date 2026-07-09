@@ -1,5 +1,6 @@
 ---
 name: freshrss-feed-reader
+skill_type: skill
 description: >-
   Read FreshRSS streams over the Google Reader (GReader) API via the
   freshrss-agent MCP server — fetch stream contents for the reading-list, a

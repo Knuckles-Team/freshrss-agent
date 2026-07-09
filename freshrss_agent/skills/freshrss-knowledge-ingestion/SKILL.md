@@ -1,5 +1,6 @@
 ---
 name: freshrss-knowledge-ingestion
+skill_type: skill
 description: >-
   Natively ingest FreshRSS data into the epistemic-graph knowledge graph via the
   freshrss-agent MCP server — push feed items as searchable :Document nodes
