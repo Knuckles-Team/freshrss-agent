@@ -1,0 +1,144 @@
+connector: freshrss-agent
+ontology_source: feed
+schema_version: '1'
+resources:
+- name: FeedCategory
+  label: Feed Category
+  id_prefix: feedcategory
+  relations: []
+- name: FeedItem
+  label: Feed Item
+  id_prefix: feeditem
+  relations:
+  - name: ingestedFrom
+    label: ingested from
+    target: FeedSource
+    lpg_rel_type: ''
+  - name: itemFrom
+    label: item from
+    target: FeedSource
+    lpg_rel_type: ''
+- name: FeedSource
+  label: Feed Source
+  id_prefix: feedsource
+  relations:
+  - name: publishesItem
+    label: publishes item
+    target: FeedItem
+    lpg_rel_type: ''
+- name: FeedSubscription
+  label: Feed Subscription
+  id_prefix: feedsubscription
+  relations:
+  - name: inCategory
+    label: in category
+    target: FeedCategory
+    lpg_rel_type: ''
+- name: RssFeed
+  label: RSS Feed
+  id_prefix: rssfeed
+  relations: []
+actions:
+- id: curate_feeds
+  name: Curate RSS Subscriptions
+  description: Subscribe, unsubscribe, label, categorize, mark-read, and star feeds in a FreshRSS instance
+- id: read_feeds
+  name: Read RSS Feed Contents
+  description: Fetch stream contents, item bodies, and unread counts from a FreshRSS instance via the
+    Google Reader API
+events:
+- name: freshrss-feed-items.updated
+  resource: feed_item
+  description: "Watermark event for 'freshrss-feed-items' \u2014 advances on updated (mcp_source_presets.json)."
+identity:
+  id_field:
+    feed_item: id
+  title_field:
+    feed_item: title
+  text_field:
+    feed_item: text
+  updated_field:
+    feed_item: updated
+permissions:
+  acl_fields: []
+  tenant_field: null
+  read_roles: []
+schema_mappings:
+  FeedCategory:
+    ontology_class: null
+    fields: {}
+  FeedItem:
+    ontology_class: Document
+    fields: {}
+  FeedSource:
+    ontology_class: DataConnector
+    fields: {}
+  FeedSubscription:
+    ontology_class: FeedSource
+    fields: {}
+  RssFeed:
+    ontology_class: FeedSource
+    fields: {}
+sync:
+- preset: freshrss-feed-items
+  server: freshrss-agent
+  tool: freshrss_reader
+  action: stream_contents
+  records_path: items
+  id_field: id
+  title_field: title
+  text_field: text
+  updated_field: updated
+  pagination: cursor
+  doc_type: feed_item
+  tool_schema_sha256: null
+  raw:
+    server: freshrss-agent
+    tool: freshrss_reader
+    action: stream_contents
+    records_path: items
+    id_field: id
+    title_field: title
+    text_field: text
+    updated_field: updated
+    url_field: url
+    continuation_path: continuation
+    pagination: cursor
+    cursor_param: continuation
+    doc_type: feed_item
+provenance:
+  generated_by: scripts/generate_connector_manifests.py
+  generated_at: '2026-07-20T18:01:37Z'
+  source_artifacts:
+  - a2a.json
+  - freshrss_agent/connectors/mcp_source_presets.json
+  - freshrss_agent/ontology/feed.ttl
+  integrity:
+    algorithm: urdna2015-sha256
+    hash: f618e3d6ef0e8d5ccbe32c90f34ec66521363b2a70408b859dd8880eb6a94369
+    triple_count: 39
+  signer: null
+  signature_algorithm: null
+  signing_public_key: null
+  signature: null
+policy:
+  pii_fields: {}
+  tenant_boundary: null
+  rls: []
+review_todos:
+- "policy.rls / policy.tenant_boundary are unset \u2014 no row-level-security predicate has been reviewed\
+  \ for this connector."
+- "provenance is UNSIGNED \u2014 ONTOLOGY_RELEASE_SIGNING_PRIVATE_KEY_REF is not resolvable in this environment\
+  \ (human-gated credential; see agent-utilities AGENTS.md 'Secrets & credential retrieval'). Re-run scripts/generate_connector_manifests.py\
+  \ with the real release key to produce a fleet-trusted signature before this connector is relied on\
+  \ for release evidence."
+- "schema_mappings.FeedCategory.ontology_class = None [UNRESOLVED \u2014 no crosswalk found by any heuristic]\
+  \ \u2014 verify manually before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.FeedItem.ontology_class = 'Document' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.FeedSource.ontology_class = 'DataConnector' [source ttl rdfs:subClassOf] \u2014 verify\
+  \ manually before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.FeedSubscription.ontology_class = 'FeedSource' [source ttl rdfs:subClassOf] \u2014\
+  \ verify manually before relying on this crosswalk for reasoning/joins."
+- "schema_mappings.RssFeed.ontology_class = 'FeedSource' [source ttl rdfs:subClassOf] \u2014 verify manually\
+  \ before relying on this crosswalk for reasoning/joins."
