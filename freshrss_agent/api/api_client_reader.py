@@ -1,7 +1,10 @@
 #!/usr/bin/python
 """Reader operations for the FreshRSS GReader API (stream contents, item bodies)."""
 
+import logging
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 class ReaderMixin:
@@ -61,8 +64,11 @@ class ReaderMixin:
                 from ..kg_ingest import maybe_ingest_items
 
                 maybe_ingest_items(result.get("items"))
-            except Exception:  # noqa: BLE001 — KG side-effect is best-effort
-                pass
+            except Exception as exc:  # noqa: BLE001 — KG side-effect is best-effort
+                logger.debug(
+                    "FreshRSS automatic KG ingestion failed (%s)",
+                    type(exc).__name__,
+                )
         return result
 
     def item_contents(self, item_ids: list[str] | str) -> dict[str, Any]:

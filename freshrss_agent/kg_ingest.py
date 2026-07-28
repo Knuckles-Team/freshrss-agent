@@ -240,7 +240,7 @@ def ingest_feed_items(
 
 
 def ingest_subscriptions(
-    subscriptions: list[dict[str, Any]],
+    subscriptions: list[dict[str, Any]] | dict[str, Any],
     *,
     client: Any | None = None,
     graph: str | None = None,
