@@ -1,0 +1,6 @@
+{
+  "connector": "freshrss-agent",
+  "current_ontology_source": "feed",
+  "migrations": [],
+  "schema_version": "1"
+}
