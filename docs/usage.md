@@ -34,7 +34,7 @@ api.mark_read([item["id"] for item in page["items"]])
 ## As a CLI
 
 ```bash
-export FRESHRSS_URL="http://freshrss.arpa"
+export FRESHRSS_URL="https://freshrss.example.invalid"
 export FRESHRSS_USER="admin"
 export FRESHRSS_API_PASSWORD="your_api_password"
 freshrss-mcp --transport stdio

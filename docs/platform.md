@@ -37,7 +37,7 @@ then enable the API under **Settings → Authentication → Allow API access** a
 an **API password** for your user. `freshrss-agent` authenticates against the
 GReader endpoint using:
 
-- `FRESHRSS_URL` — base URL of the instance (e.g. `http://freshrss.arpa`).
+- `FRESHRSS_URL` — base URL of the instance (e.g. `https://freshrss.example.invalid`).
 - `FRESHRSS_USER` — the FreshRSS username (the GReader `Email` field).
 - `FRESHRSS_API_PASSWORD` — the **API password** set in FreshRSS (not the login
   password).

@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: freshrss-agent
+ontology_source: feed
+sync:
+- preset: freshrss
+  server: freshrss-mcp
+  tool: freshrss_reader
+  action: stream_contents
+  records_path: items
+  id_field: id
+  title_field: title
+  text_field: text
+  updated_field: published
+  doc_type: news_article
+  tool_schema_sha256: eece6feb43fe63ca6bf0809c11d421fd97ca3f0b4f8ff0624d62f378ee4b3f7e
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization
