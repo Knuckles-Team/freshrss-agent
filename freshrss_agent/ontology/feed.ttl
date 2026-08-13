@@ -69,4 +69,3 @@
     rdfs:comment "CONCEPT:KG-2.122 — the FeedCategory a FeedSubscription is filed under (the IN_CATEGORY edge written by the freshrss-agent native ingest)." ;
     rdfs:domain :FeedSubscription ;
     rdfs:range :FeedCategory .
-
