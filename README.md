@@ -164,7 +164,7 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `FRESHRSS_URL` | Base URL of the FreshRSS instance (e.g. `http://freshrss.arpa`) | `http://localhost:8080` |
+| `FRESHRSS_URL` | Base URL of the FreshRSS instance (e.g. `https://freshrss.example.invalid`) | `http://localhost:8080` |
 | `FRESHRSS_USER` | FreshRSS username (GReader `Email` field) | — |
 | `FRESHRSS_API_PASSWORD` | FreshRSS **API password** (Settings → Authentication) | — |
 | `FRESHRSS_SSL_VERIFY` | Whether to verify TLS certificates | `True` |
@@ -303,7 +303,7 @@ copy-paste `mcp_config.json` for all four transports — **stdio**, **streamable
 - **Local container / uv** — launch the server from `mcp_config.json` via `uvx`,
   `docker run`, or `podman run`, or point at a local streamable-http container by `url`.
 - **Remote URL** — connect to a server deployed behind Caddy at
-  `http://freshrss-mcp.arpa/mcp` using the `"url"` key.
+  `https://freshrss-mcp.example.invalid/mcp` using the `"url"` key.
 <!-- END GENERATED: additional-deployment-options -->
 
 ## Usage
@@ -423,3 +423,19 @@ to just this package. Ask your agent to **"deploy `freshrss-agent` with agent-os
 Secrets are read-existing + seeded via `vault_sync` — you are only prompted for what's missing.
 
 <!-- END agent-os-genesis-deploy -->
+
+<!-- GOVERNED-CAPABILITY:START -->
+## Governed capability contract
+
+This package ships a compact canonical skill surface with specialist procedures
+kept as referenced workflows. The current MCP tools, skill metadata,
+`connector_manifest.yml`, ontology, mappings, shapes, fixtures, migrations,
+tool-schema fingerprints, and certification metadata form one versioned
+capability contract. Validate them together; do not rely on stale tool names or
+historical per-task skill wrappers.
+
+Runtime endpoints, credentials, certificate trust, tenant identity, retention,
+and observability policy are deployment inputs and are never packaged values.
+See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
+network transport, connector ingestion, GraphOS delegation, or trace export.
+<!-- GOVERNED-CAPABILITY:END -->
