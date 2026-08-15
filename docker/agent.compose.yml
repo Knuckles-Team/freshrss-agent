@@ -28,7 +28,7 @@ services:
         max-file: "3"
 
   freshrss-agent-agent:
-    image: knucklessg1/freshrss-agent:latest
+    image: knucklessg1/freshrss-agent:2.1.0
     container_name: freshrss-agent-agent
     hostname: freshrss-agent-agent
     restart: always

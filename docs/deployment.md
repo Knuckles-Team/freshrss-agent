@@ -70,7 +70,7 @@ daemonless runtime):
         "-e", "FRESHRSS_URL=https://service.example.com",
         "-e", "FRESHRSS_USER=admin",
         "-e", "FRESHRSS_API_PASSWORD=your_api_password",
-        "knucklessg1/freshrss-agent:latest"
+        "knucklessg1/freshrss-agent:2.1.0"
       ]
     }
   }
