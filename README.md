@@ -76,10 +76,12 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
+| `freshrss_ingest_items` | `INGESTTOOL` | Natively ingest FreshRSS feed items into epistemic-graph as :Document nodes. |
+| `freshrss_ingest_subscriptions` | `INGESTTOOL` | Natively ingest FreshRSS subscriptions into epistemic-graph as typed nodes. |
 | `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FR-OS.identity.frss |
 | `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FR-OS.governance.frss |
 
@@ -103,7 +105,7 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 </details>
 
-_2 action-routed tool(s) (default) · 10 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_4 action-routed tool(s) · 10 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in
@@ -122,8 +124,8 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `TRANSPORT` | `stdio` | options: stdio, streamable-http, sse |
 | `ENABLE_OTEL` | `True` |  |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | secret-injected |  |
-| `OTEL_EXPORTER_OTLP_SECRET_KEY` | secret-injected |  |
+| `OTEL_EXPORTER_OTLP_PUBLIC_KEY_REF` | `vault-ref-to-pk` |  |
+| `OTEL_EXPORTER_OTLP_SECRET_KEY_REF` | `vault-ref-to-sk` |  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
 | `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
@@ -134,6 +136,8 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `FRESHRSS_SSL_VERIFY` | `True` |  |
 | `READERTOOL` | `True` |  |
 | `SUBSCRIPTIONSTOOL` | `True` |  |
+| `INGESTTOOL` | `True` |  |
+| `FRESHRSS_KG_AUTO_INGEST` | `True` | gates opportunistic KG writeback in api_client_reader.py; default on |
 
 #### Inherited agent-utilities variables (apply to every connector)
 
@@ -156,7 +160,7 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `MODEL_ID` | `gpt-4o` | Model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_17 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_19 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -217,9 +221,11 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
       "env": {
         "MCP_TOOL_MODE": "intent",
         "FRESHRSS_API_PASSWORD": "your_api_password_here",
+        "FRESHRSS_KG_AUTO_INGEST": "True",
         "FRESHRSS_SSL_VERIFY": "True",
         "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
+        "INGESTTOOL": "True",
         "READERTOOL": "True",
         "SUBSCRIPTIONSTOOL": "True"
       }
@@ -254,9 +260,11 @@ own runtime secret boundary.
         "PORT": "8000",
         "MCP_TOOL_MODE": "intent",
         "FRESHRSS_API_PASSWORD": "your_api_password_here",
+        "FRESHRSS_KG_AUTO_INGEST": "True",
         "FRESHRSS_SSL_VERIFY": "True",
         "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
+        "INGESTTOOL": "True",
         "READERTOOL": "True",
         "SUBSCRIPTIONSTOOL": "True"
       }
@@ -290,9 +298,11 @@ docker run -i --rm \
   -e TRANSPORT=stdio \
   -e MCP_TOOL_MODE=intent \
   -e FRESHRSS_API_PASSWORD=your_api_password_here \
+  -e FRESHRSS_KG_AUTO_INGEST=True \
   -e FRESHRSS_SSL_VERIFY=True \
   -e FRESHRSS_URL=http://localhost:8080 \
   -e FRESHRSS_USER=admin \
+  -e INGESTTOOL=True \
   -e READERTOOL=True \
   -e SUBSCRIPTIONSTOOL=True \
   registry.example.invalid/freshrss-agent@sha256:<digest> freshrss-mcp
@@ -387,19 +397,19 @@ One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `knucklessg1/freshrss-agent:mcp` | `--target mcp` | `freshrss-agent[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `freshrss-mcp` |
-| `knucklessg1/freshrss-agent:latest` | `--target agent` (default) | `freshrss-agent[agent]` — **full** agent runtime + epistemic-graph engine | `freshrss-agent` |
+| `knucklessg1/freshrss-agent:2.1.0` | `--target agent` (default) | `freshrss-agent[agent]` — **full** agent runtime + epistemic-graph engine | `freshrss-agent` |
 
 ```bash
 docker build --target mcp   -t knucklessg1/freshrss-agent:mcp    docker/   # slim MCP server
-docker build --target agent -t knucklessg1/freshrss-agent:latest docker/   # full agent
+docker build --target agent -t knucklessg1/freshrss-agent:2.1.0 docker/   # full agent
 ```
 
 `docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
-agent (`:latest`) with a co-located `:mcp` sidecar.
+agent (`:2.1.0`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+The **full agent** (`[agent]` / `:2.1.0`) embeds the **epistemic-graph** engine (pulled in
 transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
 across multiple agents — run **epistemic-graph as its own database container** and point the
 agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
@@ -432,7 +442,7 @@ to just this package. Ask your agent to **"deploy `freshrss-agent` with agent-os
 |------|---------|
 | Bare-metal, prod (PyPI) | `uvx freshrss-mcp` · or `uv tool install freshrss-agent` |
 | Bare-metal, dev (editable) | `uv pip install -e ".[all]"` · or `pip install -e ".[all]"` |
-| Container, prod | deploy `knucklessg1/freshrss-agent:latest` via docker-compose / swarm / podman / podman-compose / kubernetes |
+| Container, prod | deploy `knucklessg1/freshrss-agent:2.1.0` via docker-compose / swarm / podman / podman-compose / kubernetes |
 | Container, dev (editable) | deploy `docker/compose.dev.yml` (source-mounted at `/src`; edits live on restart) |
 
 Secrets are read-existing + seeded via `vault_sync` — you are only prompted for what's missing.

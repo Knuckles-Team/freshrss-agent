@@ -16,7 +16,7 @@ Docker recipe for deploying one locally to serve as the target of
 # docker/platform.compose.yml — FreshRSS backing instance
 services:
   freshrss:
-    image: freshrss/freshrss:latest
+    image: freshrss/freshrss:1.29.1
     restart: unless-stopped
     environment:
       TZ: Etc/UTC

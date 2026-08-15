@@ -32,5 +32,5 @@ pip install -e ".[all]"
 ## Docker
 
 ```bash
-docker pull knucklessg1/freshrss-agent:latest
+docker pull knucklessg1/freshrss-agent:2.1.0
 ```
