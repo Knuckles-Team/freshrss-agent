@@ -1,7 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "7588dee7fb5f2d7968c1dbd4144c8533e10b3e2c3ce1ea5764a7273e9677756b",
+    "connector_manifest.yml": "23642e39a862e72310b9a2a4bd3b7fe268798fe9bc90e998addda60f2e2e83bf",
     "freshrss_agent/connectors/mcp_source_presets.json": "b17f6c0fa2d36fc0601a012a168c7eb9c83c257b14a8714f90d42e371b7ed6ae",
     "freshrss_agent/connectors/tool_schema_fingerprints.json": "ad2dd1f8b73d7a8f04692dbe2e958c892dc679ec5658993988608a073372bb99",
     "freshrss_agent/ontology/feed.ttl": "8da01dda3230a5c0114c2c743c544d2b13e123ba0357c6e0cf568f15e0837ad2",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "freshrss-agent",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-26T13:42:55Z"
 }
