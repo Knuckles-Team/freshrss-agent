@@ -72,3 +72,46 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
         "schema_version": "1",
         "tools": {"freshrss_reader": expected},
     }
+
+
+@pytest.mark.concept("FR-OS.governance.frss")
+def test_reader_dispatch_has_no_dead_unknown_action_fallback():
+    """BUG-CX-045: `resolve_action(action, {"stream_contents", "item_contents",
+    "unread_count"}, ...)` runs BEFORE the if-chain in `freshrss_reader` and
+    either raises its own rich did-you-mean `ValueError` for anything outside
+    that exact 3-member set, or returns one of those 3 members -- the if-chain
+    below covers all 3, so the trailing `raise ValueError(f"Unknown action:
+    {action}")` can never execute. It is dead code that the complexity gate
+    still counts as a branch. Structural proof it is gone."""
+    import inspect
+
+    from freshrss_agent.mcp import mcp_reader
+
+    src = inspect.getsource(mcp_reader.register_reader_tools)
+    assert 'raise ValueError(f"Unknown action: {action}")' not in src, (
+        "the trailing Unknown-action raise after the if-chain is unreachable "
+        "(resolve_action already raised or canonicalized above it) -- BUG-CX-045"
+    )
+
+
+@pytest.mark.concept("FR-OS.governance.frss")
+def test_reader_invalid_action_still_raises_resolve_action_error(monkeypatch):
+    """Removing the dead fallback must not change observable behaviour: an
+    unknown action still raises resolve_action's rich, did-you-mean ValueError
+    -- never an unhandled error from a missing branch."""
+    from unittest.mock import MagicMock
+
+    monkeypatch.setattr("sys.argv", ["freshrss-mcp"])
+    mcp, _args, _middlewares = get_mcp_instance()
+    tools = asyncio.run(mcp.list_tools())
+    reader = next(tool for tool in tools if tool.name == "freshrss_reader")
+
+    with pytest.raises(ValueError, match="Unknown action"):
+        asyncio.run(
+            reader.fn(
+                action="totally_bogus_action",
+                params_json="{}",
+                client=MagicMock(),
+                ctx=None,
+            )
+        )

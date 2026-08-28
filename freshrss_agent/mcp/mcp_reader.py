@@ -56,10 +56,13 @@ def register_reader_tools(mcp: FastMCP):
             return resolved
         action = resolved
 
+        # BUG-CX-045: no trailing "else raise Unknown action" fallback here.
+        # resolve_action() above already raised for any action outside the
+        # exact {"stream_contents", "item_contents", "unread_count"} set, or
+        # returned one of those 3 members -- and the 3 branches below cover
+        # that set exhaustively, so a fourth branch could never be reached.
         if action == "stream_contents":
             return await run_blocking(client.stream_contents, **kwargs)
         if action == "item_contents":
             return await run_blocking(client.item_contents, **kwargs)
-        if action == "unread_count":
-            return await run_blocking(client.unread_count, **kwargs)
-        raise ValueError(f"Unknown action: {action}")
+        return await run_blocking(client.unread_count, **kwargs)
