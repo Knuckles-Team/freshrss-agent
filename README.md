@@ -133,7 +133,8 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `FRESHRSS_URL` | `http://localhost:8080` |  |
 | `FRESHRSS_USER` | `admin` |  |
 | `FRESHRSS_API_PASSWORD` | secret-injected |  |
-| `FRESHRSS_SSL_VERIFY` | `True` |  |
+| `FRESHRSS_TLS_PROFILE` | — | Named outbound TLS policy from AgentConfig. Use a reference for runtime-only trust material; peer and hostname verification remain mandatory. |
+| `FRESHRSS_TLS_PROFILE_REF` | — |  |
 | `READERTOOL` | `True` |  |
 | `SUBSCRIPTIONSTOOL` | `True` |  |
 | `INGESTTOOL` | `True` |  |
@@ -160,7 +161,7 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_19 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -173,7 +174,7 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
 | `FRESHRSS_URL` | Base URL of the FreshRSS instance (e.g. `https://freshrss.example.invalid`) | `http://localhost:8080` |
 | `FRESHRSS_USER` | FreshRSS username (GReader `Email` field) | — |
 | `FRESHRSS_API_PASSWORD` | FreshRSS **API password** (Settings → Authentication) | — |
-| `FRESHRSS_SSL_VERIFY` | Whether to verify TLS certificates | `True` |
+| `FRESHRSS_TLS_PROFILE` / `FRESHRSS_TLS_PROFILE_REF` | Named outbound TLS policy from AgentConfig; verification is mandatory | _(empty, system trust)_ |
 
 **MCP server / transport**
 
@@ -222,7 +223,6 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
         "MCP_TOOL_MODE": "intent",
         "FRESHRSS_API_PASSWORD": "your_api_password_here",
         "FRESHRSS_KG_AUTO_INGEST": "True",
-        "FRESHRSS_SSL_VERIFY": "True",
         "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
         "INGESTTOOL": "True",
@@ -261,7 +261,6 @@ own runtime secret boundary.
         "MCP_TOOL_MODE": "intent",
         "FRESHRSS_API_PASSWORD": "your_api_password_here",
         "FRESHRSS_KG_AUTO_INGEST": "True",
-        "FRESHRSS_SSL_VERIFY": "True",
         "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
         "INGESTTOOL": "True",
@@ -299,7 +298,6 @@ docker run -i --rm \
   -e MCP_TOOL_MODE=intent \
   -e FRESHRSS_API_PASSWORD=your_api_password_here \
   -e FRESHRSS_KG_AUTO_INGEST=True \
-  -e FRESHRSS_SSL_VERIFY=True \
   -e FRESHRSS_URL=http://localhost:8080 \
   -e FRESHRSS_USER=admin \
   -e INGESTTOOL=True \

@@ -5,9 +5,12 @@ import logging
 from typing import Any
 
 import requests
-import urllib3
 from agent_utilities.base_utilities import get_logger
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
+from agent_utilities.core.transport_security import (
+    ResolvedTLSProfile,
+    resolve_configured_tls_profile,
+)
 
 logger = get_logger(__name__)
 
@@ -28,17 +31,14 @@ class FreshRSSClientBase:
         base_url: str | None,
         username: str | None,
         api_password: str | None,
-        verify: bool = True,
+        tls_profile: ResolvedTLSProfile | None = None,
     ):
         self.base_url = (base_url or "").rstrip("/")
         self.username = username or ""
         self.api_password = api_password or ""
-        self.verify = verify
-        self.session = requests.Session()
+        self.tls_profile = tls_profile or resolve_configured_tls_profile("freshrss")
+        self.session = self.tls_profile.configure_requests_session(requests.Session())
         self._auth_token: str | None = None
-
-        if self.verify is False:
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     # -- internals -----------------------------------------------------------
 
@@ -51,7 +51,6 @@ class FreshRSSClientBase:
         response = self.session.post(
             url,
             data={"Email": self.username, "Passwd": self.api_password},
-            verify=self.verify,
             timeout=30,
         )
         if response.status_code in (401, 403):
@@ -78,7 +77,6 @@ class FreshRSSClientBase:
         response = self.session.get(
             self._greader_url("reader/api/0/token"),
             headers=self._auth_headers(),
-            verify=self.verify,
             timeout=30,
         )
         if response.status_code == 401:
@@ -86,7 +84,6 @@ class FreshRSSClientBase:
             response = self.session.get(
                 self._greader_url("reader/api/0/token"),
                 headers=self._auth_headers(),
-                verify=self.verify,
                 timeout=30,
             )
         response.raise_for_status()
@@ -115,7 +112,6 @@ class FreshRSSClientBase:
                 params=params,
                 data=data,
                 headers=self._auth_headers(),
-                verify=self.verify,
                 timeout=60,
             )
 
@@ -135,3 +131,8 @@ class FreshRSSClientBase:
 
     def set_debug(self, debug: bool = False) -> None:
         logger.setLevel(logging.DEBUG if debug else logging.ERROR)
+
+    def close(self) -> None:
+        """Release transport resources and runtime-only TLS material."""
+        self.session.close()
+        self.tls_profile.cleanup()

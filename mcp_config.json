@@ -10,7 +10,6 @@
         "MCP_TOOL_MODE": "intent",
         "FRESHRSS_API_PASSWORD": "your_api_password_here",
         "FRESHRSS_KG_AUTO_INGEST": "True",
-        "FRESHRSS_SSL_VERIFY": "True",
         "FRESHRSS_URL": "http://localhost:8080",
         "FRESHRSS_USER": "admin",
         "INGESTTOOL": "True",
