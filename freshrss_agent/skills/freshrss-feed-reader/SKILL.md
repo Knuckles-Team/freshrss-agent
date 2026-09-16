@@ -40,7 +40,7 @@ Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
 | `FRESHRSS_URL` | ✅ | Base URL of the FreshRSS instance |
 | `FRESHRSS_USER` | ✅ | GReader account username |
 | `FRESHRSS_API_PASSWORD` | ✅ | GReader API password (Settings → Profile → API) |
-| `FRESHRSS_SSL_VERIFY` | optional | TLS verification toggle |
+| `FRESHRSS_TLS_PROFILE` / `FRESHRSS_TLS_PROFILE_REF` | optional | Named outbound TLS policy (verification is mandatory) |
 
 `MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface
 (used below) vs. the one-to-one verbose tools.

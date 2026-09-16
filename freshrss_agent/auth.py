@@ -10,13 +10,17 @@ Priority:
 
 For a multi-tenant service, add an ``instances.py`` that resolves a configured
 instance NAME (from ``<service>_instances`` in ``~/.config/agent-utilities/config.json``)
-to ``(url, token, verify)`` and call it here before the delegation/fixed paths — see
+to ``(url, token, tls_profile)`` and call it here before the delegation/fixed paths — see
 ``gitlab_api.instances`` (CONCEPT:AU-KG.backend.declared-columns-so-schema) for the golden pattern.
 """
 
 from agent_utilities.base_utilities import get_logger
 from agent_utilities.core.config import setting
 from agent_utilities.core.exceptions import AuthError, UnauthorizedError
+from agent_utilities.core.transport_security import (
+    ResolvedTLSProfile,
+    resolve_configured_tls_profile,
+)
 
 from .api import ApiClientSystem
 
@@ -27,7 +31,7 @@ _client = None
 def get_client(
     url: str | None = None,
     token: str | None = None,
-    verify: bool | None = None,
+    tls_profile: ResolvedTLSProfile | None = None,
     config: dict | None = None,
 ) -> ApiClientSystem:
     """Get or create a singleton API client (OIDC delegation or fixed credentials)."""
@@ -38,8 +42,12 @@ def get_client(
     base_url = url or setting("FRESHRSS_URL", "http://localhost:8080")
     api_password = token or setting("FRESHRSS_API_PASSWORD", "")
     username = setting("FRESHRSS_USER", "")
-    if verify is None:
-        verify = setting("FRESHRSS_SSL_VERIFY", True)
+    if tls_profile is None:
+        tls_profile = resolve_configured_tls_profile(
+            "freshrss",
+            profile_name=setting("FRESHRSS_TLS_PROFILE", "") or None,
+            profile_ref=setting("FRESHRSS_TLS_PROFILE_REF", "") or None,
+        )
 
     from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
@@ -54,7 +62,6 @@ def get_client(
                 config=config,
                 audience=(config or {}).get("audience", base_url),
                 scopes=(config or {}).get("delegated_scopes", "api"),
-                verify=verify,
             )
             identity = get_user_identity()
             logger.info(
@@ -65,7 +72,7 @@ def get_client(
                 base_url=base_url,
                 username=username,
                 api_password=delegated_token,
-                verify=verify,
+                tls_profile=tls_profile,
             )
             return _client
         except Exception as e:
@@ -82,7 +89,7 @@ def get_client(
             base_url=base_url,
             username=username,
             api_password=api_password,
-            verify=verify,
+            tls_profile=tls_profile,
         )
     except (AuthError, UnauthorizedError) as e:
         raise RuntimeError(
