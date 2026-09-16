@@ -31,7 +31,11 @@ from typing import Any
 
 from agent_utilities.knowledge_graph.memory.native_ingest import (
     NativeIngestError,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
     ingest_documents as _native_ingest_documents,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
     ingest_entities as _native_ingest_entities,
 )
 
@@ -60,7 +64,12 @@ def ingest_entities(
         return None
     try:
         return _native_ingest_entities(
-            entities, relationships, source=_SOURCE, domain=_DOMAIN, client=client, graph=graph
+            entities,
+            relationships,
+            source=_SOURCE,
+            domain=_DOMAIN,
+            client=client,
+            graph=graph,
         )
     except NativeIngestError as exc:
         logger.debug("KG ingest unavailable/failed: %s", exc)
