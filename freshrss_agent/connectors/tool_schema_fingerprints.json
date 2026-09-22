@@ -1,8 +1,8 @@
 {
-  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
   "connector": "freshrss-agent",
   "schema_version": "1",
   "tools": {
-    "freshrss_reader": "eece6feb43fe63ca6bf0809c11d421fd97ca3f0b4f8ff0624d62f378ee4b3f7e"
+    "freshrss_reader": "55f60ea2f0ddbdb85e003d4a2b6f0966e22a1761db73cbd66450add8153fb6e9"
   }
 }

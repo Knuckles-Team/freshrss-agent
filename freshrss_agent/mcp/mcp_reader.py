@@ -1,10 +1,12 @@
+from typing import Literal
+
 #!/usr/bin/python
 """MCP tools for FreshRSS reader operations."""
 
 import json
 
-from agent_utilities.mcp.concurrency import run_blocking
 from agent_utilities.mcp.action_dispatch import resolve_action
+from agent_utilities.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -17,7 +19,7 @@ def register_reader_tools(mcp: FastMCP):
 
     @mcp.tool(tags={"reader"})
     async def freshrss_reader(
-        action: str = Field(
+        action: Literal["item_contents", "stream_contents", "unread_count"] = Field(
             description="Action to perform. Must be one of: "
             "'stream_contents', 'item_contents', 'unread_count'."
         ),

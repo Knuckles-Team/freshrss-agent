@@ -99,7 +99,7 @@ sync:
   updated_field: published
   pagination: cursor
   doc_type: news_article
-  tool_schema_sha256: eece6feb43fe63ca6bf0809c11d421fd97ca3f0b4f8ff0624d62f378ee4b3f7e
+  tool_schema_sha256: 55f60ea2f0ddbdb85e003d4a2b6f0966e22a1761db73cbd66450add8153fb6e9
   raw:
     server: freshrss-mcp
     tool: freshrss_reader
