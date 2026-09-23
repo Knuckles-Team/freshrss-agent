@@ -17,7 +17,18 @@ from ..auth import get_client
 def register_reader_tools(mcp: FastMCP):
     """Register reader tag dynamic tools."""
 
-    @mcp.tool(tags={"reader"})
+    @mcp.tool(
+        tags={"reader"},
+        annotations={
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def freshrss_reader(
         action: Literal["item_contents", "stream_contents", "unread_count"] = Field(
             description="Action to perform. Must be one of: "
