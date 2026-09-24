@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 import freshrss_agent.auth as auth_module
 from freshrss_agent.auth import get_client

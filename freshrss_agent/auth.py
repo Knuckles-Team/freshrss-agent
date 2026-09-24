@@ -14,19 +14,13 @@ to ``(url, token, tls_profile)`` and call it here before the delegation/fixed pa
 ``gitlab_api.instances`` (CONCEPT:AU-KG.backend.declared-columns-so-schema) for the golden pattern.
 """
 
-import httpx
 from agent_connector_sdk.auth.delegation import (
     DelegationSettings,
     current_user_identity,
-    current_user_token,
-    exchange_token,
+    delegated_token,
 )
 from agent_connector_sdk.config import setting
-from agent_connector_sdk.exceptions import (
-    AuthError,
-    LoginRequiredError,
-    UnauthorizedError,
-)
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
 from agent_connector_sdk.tls.profile import ResolvedTLSProfile
 from agent_connector_sdk.tls.resolve import resolve_tls_profile
 from agent_connector_sdk.utilities import get_logger
@@ -62,13 +56,7 @@ def get_client(
     # --- Path 1: OIDC Delegation (RFC 8693 Token Exchange) ---
     if settings.enabled:
         try:
-            subject_token = current_user_token()
-            if not subject_token:
-                raise LoginRequiredError("no verified caller token to delegate")
-            with httpx.Client(timeout=30) as http_client:
-                delegated_token = exchange_token(
-                    settings, subject_token=subject_token, http_client=http_client
-                ).value
+            token_value = delegated_token(settings)
             logger.info(
                 "Using OIDC delegated token",
                 extra={"identity_ref": current_user_identity(), "url": base_url},
@@ -76,7 +64,7 @@ def get_client(
             _client = ApiClientSystem(
                 base_url=base_url,
                 username=username,
-                api_password=delegated_token,
+                api_password=token_value,
                 tls_profile=tls_profile,
             )
             return _client
