@@ -5,12 +5,10 @@ import logging
 from typing import Any
 
 import requests
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
-)
+from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from agent_connector_sdk.utilities import get_logger
 
 logger = get_logger(__name__)
 
@@ -36,7 +34,7 @@ class FreshRSSClientBase:
         self.base_url = (base_url or "").rstrip("/")
         self.username = username or ""
         self.api_password = api_password or ""
-        self.tls_profile = tls_profile or resolve_configured_tls_profile("freshrss")
+        self.tls_profile = tls_profile or resolve_tls_profile("freshrss")
         self.session = self.tls_profile.configure_requests_session(requests.Session())
         self._auth_token: str | None = None
 

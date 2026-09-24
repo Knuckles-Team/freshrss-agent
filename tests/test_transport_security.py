@@ -5,10 +5,12 @@ be honoured end-to-end (base client + auth.py + the OIDC delegation path).
 """
 
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 
 import pytest
+from agent_connector_sdk.auth.delegation import DelegationSettings
+from agent_connector_sdk.auth.tokens import AccessToken
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -18,9 +20,18 @@ import freshrss_agent.auth as auth_module
 from freshrss_agent.api import FreshRSSApi
 from freshrss_agent.auth import get_client
 
+_DELEGATION_SETTINGS = DelegationSettings(
+    enabled=True,
+    token_endpoint="https://idp.example/token",
+    client_id="freshrss-agent",
+    client_secret_ref="env://FRESHRSS_OIDC_CLIENT_SECRET",
+    audience="https://freshrss.internal",
+    scopes="api",
+)
+
 
 def _self_signed_ca_pem(common_name: str) -> str:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     key = ec.generate_private_key(ec.SECP256R1())
     name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, common_name)])
     certificate = (
@@ -89,33 +100,35 @@ def test_client_honors_named_tls_profile():
 
 @pytest.mark.concept("FR-OS.identity.frss")
 def test_delegation_path_never_passes_verify_kwarg():
-    """The OIDC delegation path must call ``get_delegated_token`` without a
+    """The OIDC delegation path must call ``exchange_token`` without a
     ``verify=`` kwarg (it does not accept one) and must construct the client
     with a resolved TLS profile, never a bare boolean."""
     auth_module._client = None
+    fake_token = AccessToken("delegated-token", 300.0, 0.0)
     with patch.dict(
         os.environ,
         {"FRESHRSS_URL": "https://freshrss.internal"},
         clear=True,
     ):
-        with patch(
-            "agent_utilities.mcp.delegated_auth.is_delegation_enabled",
-            return_value=True,
+        with patch.object(
+            DelegationSettings, "from_settings", return_value=_DELEGATION_SETTINGS
         ):
             with patch(
-                "agent_utilities.mcp.delegated_auth.get_delegated_token",
-                return_value="delegated-token",
-            ) as mock_get_token:
+                "freshrss_agent.auth.current_user_token", return_value="user-token"
+            ):
                 with patch(
-                    "agent_utilities.mcp.delegated_auth.get_user_identity",
-                    return_value={"email": "test@example.com"},
-                ):
-                    with patch("freshrss_agent.auth.ApiClientSystem") as mock_cls:
-                        client = get_client()
-                        assert client is not None
-                        assert mock_get_token.called
-                        _, kwargs = mock_get_token.call_args
-                        assert "verify" not in kwargs
-                        _, client_kwargs = mock_cls.call_args
-                        assert client_kwargs["tls_profile"].verify_enabled is True
+                    "freshrss_agent.auth.exchange_token", return_value=fake_token
+                ) as mock_exchange:
+                    with patch(
+                        "freshrss_agent.auth.current_user_identity",
+                        return_value="actor:test",
+                    ):
+                        with patch("freshrss_agent.auth.ApiClientSystem") as mock_cls:
+                            client = get_client()
+                            assert client is not None
+                            assert mock_exchange.called
+                            _, kwargs = mock_exchange.call_args
+                            assert "verify" not in kwargs
+                            _, client_kwargs = mock_cls.call_args
+                            assert client_kwargs["tls_profile"].verify_enabled is True
     auth_module._client = None

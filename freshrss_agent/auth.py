@@ -4,8 +4,8 @@
 
 Priority:
 1. **OIDC Delegation** (RFC 8693 Token Exchange) — when ``ENABLE_DELEGATION`` is
-   active, exchanges the IdP-issued user token for a downstream access token via the
-   shared ``agent_utilities.mcp.delegated_auth`` helper.
+   active, exchanges the caller's verified MCP token for a downstream access token
+   via ``agent_connector_sdk.auth.delegation``.
 2. **Fixed credentials** — falls back to the ``FRESHRSS_API_PASSWORD`` env var.
 
 For a multi-tenant service, add an ``instances.py`` that resolves a configured
@@ -14,13 +14,22 @@ to ``(url, token, tls_profile)`` and call it here before the delegation/fixed pa
 ``gitlab_api.instances`` (CONCEPT:AU-KG.backend.declared-columns-so-schema) for the golden pattern.
 """
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.exceptions import AuthError, UnauthorizedError
-from agent_utilities.core.transport_security import (
-    ResolvedTLSProfile,
-    resolve_configured_tls_profile,
+import httpx
+from agent_connector_sdk.auth.delegation import (
+    DelegationSettings,
+    current_user_identity,
+    current_user_token,
+    exchange_token,
 )
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.exceptions import (
+    AuthError,
+    LoginRequiredError,
+    UnauthorizedError,
+)
+from agent_connector_sdk.tls.profile import ResolvedTLSProfile
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from agent_connector_sdk.utilities import get_logger
 
 from .api import ApiClientSystem
 
@@ -32,7 +41,6 @@ def get_client(
     url: str | None = None,
     token: str | None = None,
     tls_profile: ResolvedTLSProfile | None = None,
-    config: dict | None = None,
 ) -> ApiClientSystem:
     """Get or create a singleton API client (OIDC delegation or fixed credentials)."""
     global _client
@@ -43,30 +51,27 @@ def get_client(
     api_password = token or setting("FRESHRSS_API_PASSWORD", "")
     username = setting("FRESHRSS_USER", "")
     if tls_profile is None:
-        tls_profile = resolve_configured_tls_profile(
+        tls_profile = resolve_tls_profile(
             "freshrss",
             profile_name=setting("FRESHRSS_TLS_PROFILE", "") or None,
             profile_ref=setting("FRESHRSS_TLS_PROFILE_REF", "") or None,
         )
 
-    from agent_utilities.mcp.delegated_auth import (
-        get_delegated_token,
-        get_user_identity,
-        is_delegation_enabled,
-    )
+    settings = DelegationSettings.from_settings()
 
     # --- Path 1: OIDC Delegation (RFC 8693 Token Exchange) ---
-    if is_delegation_enabled(config):
+    if settings.enabled:
         try:
-            delegated_token = get_delegated_token(
-                config=config,
-                audience=(config or {}).get("audience", base_url),
-                scopes=(config or {}).get("delegated_scopes", "api"),
-            )
-            identity = get_user_identity()
+            subject_token = current_user_token()
+            if not subject_token:
+                raise LoginRequiredError("no verified caller token to delegate")
+            with httpx.Client(timeout=30) as http_client:
+                delegated_token = exchange_token(
+                    settings, subject_token=subject_token, http_client=http_client
+                ).value
             logger.info(
                 "Using OIDC delegated token",
-                extra={"user_email": identity.get("email"), "url": base_url},
+                extra={"identity_ref": current_user_identity(), "url": base_url},
             )
             _client = ApiClientSystem(
                 base_url=base_url,
