@@ -34,7 +34,7 @@ volumes:
 
 After the container is up, complete the web installer at `http://localhost:8080`,
 then enable the API under **Settings → Authentication → Allow API access** and set
-an **API password** for your user. `freshrss-agent` authenticates against the
+an **API password** for the operator's user. `freshrss-agent` authenticates against the
 GReader endpoint using:
 
 - `FRESHRSS_URL` — base URL of the instance (e.g. `https://freshrss.example.invalid`).
