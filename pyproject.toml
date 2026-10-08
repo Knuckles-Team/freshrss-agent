@@ -96,3 +96,6 @@ description = "Fetch stream contents, item bodies, and unread counts from a Fres
 id = "curate_feeds"
 name = "Curate RSS Subscriptions"
 description = "Subscribe, unsubscribe, label, categorize, mark-read, and star feeds in a FreshRSS instance"
+
+[tool.pipelines_hooks.ste]
+exempt = ["specs/*", "specs/**/*"]

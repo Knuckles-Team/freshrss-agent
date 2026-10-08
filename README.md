@@ -67,7 +67,7 @@ This repository is actively maintained - Contributions are welcome!
 > FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
 > agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
 > `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
-> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> Use the full `[agent]` extra only when the operator need the integrated Pydantic AI agent
 > (see [Installation](#installation)).
 
 ### Available MCP Tools
@@ -362,12 +362,12 @@ listing every valid action for that domain.
 
 ## Installation
 
-Pick the extra that matches what you want to run:
+Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `freshrss-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
-| `freshrss-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `freshrss-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | The operator only run the **MCP server** (smallest install / image) |
+| `freshrss-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | The operator run the **integrated agent** |
 | `freshrss-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
