@@ -3,7 +3,7 @@
 
 import json
 
-from agent_utilities.mcp.concurrency import run_blocking
+from agent_connector_sdk.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -42,7 +42,7 @@ def register_ingest_tools(mcp: FastMCP):
             await ctx.info("Fetching stream for ingestion...")
         result = await run_blocking(client.stream_contents, **kwargs)
         items = result.get("items", []) if isinstance(result, dict) else []
-        ingested = ingest_feed_items(items)
+        ingested = await ingest_feed_items(items)
         return {"listed": len(items), "ingested": ingested}
 
     @mcp.tool(tags={"misc", "kg"})
@@ -67,7 +67,7 @@ def register_ingest_tools(mcp: FastMCP):
             await ctx.info("Listing subscriptions for ingestion...")
         result = await run_blocking(client.subscription_list)
         subs = result.get("subscriptions", []) if isinstance(result, dict) else []
-        ingested = ingest_subscriptions(subs)
+        ingested = await ingest_subscriptions(subs)
         return {"listed": len(subs), "ingested": ingested}
 
     return None
