@@ -92,29 +92,41 @@ def test_delegation_path_never_passes_verify_kwarg():
     """The OIDC delegation path must call ``get_delegated_token`` without a
     ``verify=`` kwarg (it does not accept one) and must construct the client
     with a resolved TLS profile, never a bare boolean."""
+    from agent_connector_sdk.auth.delegation import DelegationSettings
+    from agent_connector_sdk.auth.tokens import AccessToken
+
     auth_module._client = None
+    fake_settings = DelegationSettings(
+        enabled=True,
+        token_endpoint="https://idp.internal/token",
+        client_id="freshrss-agent",
+        client_secret_ref="env://FAKE_CLIENT_SECRET",
+        audience="https://freshrss.internal",
+    )
     with patch.dict(
         os.environ,
         {"FRESHRSS_URL": "https://freshrss.internal"},
         clear=True,
     ):
         with patch(
-            "agent_utilities.mcp.delegated_auth.is_delegation_enabled",
-            return_value=True,
+            "agent_connector_sdk.auth.delegation.DelegationSettings.from_settings",
+            return_value=fake_settings,
         ):
             with patch(
-                "agent_utilities.mcp.delegated_auth.get_delegated_token",
-                return_value="delegated-token",
-            ) as mock_get_token:
+                "agent_connector_sdk.auth.delegation.current_user_token",
+                return_value="caller-token",
+            ):
                 with patch(
-                    "agent_utilities.mcp.delegated_auth.get_user_identity",
-                    return_value={"email": "test@example.com"},
-                ):
+                    "agent_connector_sdk.auth.delegation.exchange_token",
+                    return_value=AccessToken(
+                        value="delegated-token", ttl_seconds=300, expires_at=0.0
+                    ),
+                ) as mock_exchange:
                     with patch("freshrss_agent.auth.ApiClientSystem") as mock_cls:
                         client = get_client()
                         assert client is not None
-                        assert mock_get_token.called
-                        _, kwargs = mock_get_token.call_args
+                        assert mock_exchange.called
+                        _, kwargs = mock_exchange.call_args
                         assert "verify" not in kwargs
                         _, client_kwargs = mock_cls.call_args
                         assert client_kwargs["tls_profile"].verify_enabled is True
