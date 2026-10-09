@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
-from agent_utilities.protocols.source_connectors.tool_schema import (
+from agent_connector_sdk.manifest.tool_schema import (
     canonical_input_schema,
     compatibility_fingerprint,
 )

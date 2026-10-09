@@ -11,14 +11,13 @@ modalities that apply to a feed reader:
   specialization) + their ``:FeedCategory`` folders and ``:inCategory`` links
   (``ingest_subscriptions``).
 
-This is a **thin mapper** over the shared primitive
-``agent_utilities.knowledge_graph.memory.native_ingest`` — the one connector write
-path; there is no self-contained fallback transaction here. The MCP tool surface
-must never raise when the KG stack is down, so every entry point stays
-**best-effort**: it returns ``None`` (never raises) for empty input or when the
-shared primitive reports :class:`NativeIngestError` (no reachable engine, or a
-malformed record). Node ids follow ``freshrss:<class>:<externalId>`` and each
-``node_type`` matches a class the package's ``ontology_providers`` ``feed.ttl``
+This is a **thin mapper** over the shared ``agent_connector_sdk.ingest`` knowledge-ingest
+facade — the one connector write path; there is no self-contained fallback transaction
+here. The MCP tool surface must never raise when the KG stack is down, so every entry
+point stays **best-effort**: it returns ``None`` (never raises) for empty input or when
+the facade reports :class:`IngestUnavailableError`/:class:`IngestError` (no reachable
+engine, or a malformed record). Node ids follow ``freshrss:<class>:<externalId>`` and
+each ``node_type`` matches a class the package's ``ontology_providers`` ``feed.ttl``
 federates.
 """
 
@@ -29,14 +28,16 @@ import re
 import time
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    NativeIngestError,
-)
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_documents as _native_ingest_documents,
-)
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Document,
+    Entity,
+    IngestBinding,
+    IngestError,
+    IngestUnavailableError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
 
 logger = logging.getLogger("freshrss_agent.kg")
@@ -44,43 +45,78 @@ logger = logging.getLogger("freshrss_agent.kg")
 _SOURCE = "freshrss-agent"
 _DOMAIN = "freshrss"
 
+_BINDING = IngestBinding(connector="freshrss-agent", stream=_DOMAIN)
 
-def ingest_entities(
+
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record.get("id"),
+        node_type=record.get("node_type"),
+        properties={k: v for k, v in record.items() if k not in ("id", "node_type")},
+    )
+
+
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    props = {
+        k: v
+        for k, v in record.items()
+        if k not in ("source", "target", "relationship")
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=props or None,
+    )
+
+
+def _to_document(record: dict[str, Any]) -> Document:
+    return Document(
+        id=record["id"],
+        text=record["text"],
+        title=record.get("title"),
+        source_uri=record.get("source_uri"),
+        properties={
+            k: v
+            for k, v in record.items()
+            if k not in ("id", "text", "title", "source_uri")
+        },
+    )
+
+
+async def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Write typed OWL nodes (+ edges) into epistemic-graph. Best-effort, never raises.
 
     ``entities``: ``[{"id":..., "node_type":<owl:Class>, ...props}]``.
     ``relationships``: ``[{"source":id, "target":id, "relationship":<link>}]``.
     Returns ``{"nodes":n, "edges":m}`` or ``None`` (empty input / no reachable engine /
-    malformed record). ``client``/``graph`` may be injected (tests); otherwise the
-    process-owned governed authority is resolved on demand.
+    malformed record). ``ingest`` may be injected (tests); otherwise the process-wide
+    facade is resolved on demand.
     """
     if not entities:
         return None
+    change_set = ChangeSet(
+        entities=tuple(_to_entity(e) for e in entities),
+        relationships=tuple(_to_relationship(r) for r in relationships or ()),
+    )
     try:
-        return _native_ingest_entities(
-            entities,
-            relationships,
-            source=_SOURCE,
-            domain=_DOMAIN,
-            client=client,
-            graph=graph,
-        )
-    except NativeIngestError as exc:
+        service = ingest or current_ingest()
+        receipt = await service.submit(_BINDING, change_set)
+    except (IngestUnavailableError, IngestError) as exc:
         logger.debug("KG ingest unavailable/failed: %s", exc)
         return None
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
-def ingest_documents(
+async def ingest_documents(
     documents: list[dict[str, Any]],
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Write text records as ``:Document`` nodes (semantic-search fodder). Best-effort.
 
@@ -88,7 +124,7 @@ def ingest_documents(
     Returns ``{"nodes":n, "edges":0}`` or ``None``.
     """
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    nodes: list[dict[str, Any]] = []
+    docs: list[dict[str, Any]] = []
     for doc in documents or []:
         did = doc.get("id")
         text = doc.get("text") or doc.get("content")
@@ -98,16 +134,17 @@ def ingest_documents(
         node["id"] = did
         node["text"] = text
         node.setdefault("created_at", now)
-        nodes.append(node)
-    if not nodes:
+        docs.append(node)
+    if not docs:
         return None
+    change_set = ChangeSet(documents=tuple(_to_document(d) for d in docs))
     try:
-        return _native_ingest_documents(
-            nodes, source=_SOURCE, domain=_DOMAIN, client=client, graph=graph
-        )
-    except NativeIngestError as exc:
+        service = ingest or current_ingest()
+        receipt = await service.submit(_BINDING, change_set)
+    except (IngestUnavailableError, IngestError) as exc:
         logger.debug("KG ingest unavailable/failed: %s", exc)
         return None
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 # --- domain mappers (records -> entity/document dicts) ---------------------------
@@ -137,11 +174,10 @@ def _slug(raw: str) -> str:
     return re.sub(r"[^0-9A-Za-z._:-]", "_", raw)
 
 
-def ingest_feed_items(
+async def ingest_feed_items(
     items: list[dict[str, Any]],
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Map FreshRSS stream-contents items → ``:Document`` nodes and ingest.
 
@@ -176,14 +212,13 @@ def ingest_feed_items(
                 "externalToolId": ext,
             }
         )
-    return ingest_documents(docs, client=client, graph=graph)
+    return await ingest_documents(docs, ingest=ingest)
 
 
-def ingest_subscriptions(
+async def ingest_subscriptions(
     subscriptions: list[dict[str, Any]] | dict[str, Any],
     *,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
     """Map FreshRSS subscription records → ``:FeedSubscription`` (+ ``:FeedCategory``).
 
@@ -242,16 +277,21 @@ def ingest_subscriptions(
                     "relationship": "inCategory",
                 }
             )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
 def maybe_ingest_items(items: Any) -> dict[str, int] | None:
     """Best-effort, default-on hook for the fetch flow (never raises).
 
-    Called from ``ReaderMixin.stream_contents`` after normalization. Controlled by
-    the ``FRESHRSS_KG_AUTO_INGEST`` env flag (default on); no-ops on any failure or
-    when no engine is reachable.
+    Called from ``ReaderMixin.stream_contents``, a plain synchronous method that
+    itself runs off the engine's event loop (invoked through
+    ``agent_connector_sdk.mcp.concurrency.run_blocking``'s worker thread), so this
+    bridges into the async ``ingest_feed_items`` with its own short-lived event loop
+    rather than requiring every caller up the stack to turn async. Controlled by the
+    ``FRESHRSS_KG_AUTO_INGEST`` env flag (default on); no-ops on any failure or when
+    no engine is reachable.
     """
+    import asyncio
     import os
 
     if os.environ.get("FRESHRSS_KG_AUTO_INGEST", "1").lower() in ("0", "false", "no"):
@@ -259,7 +299,7 @@ def maybe_ingest_items(items: Any) -> dict[str, int] | None:
     if not isinstance(items, list) or not items:
         return None
     try:
-        return ingest_feed_items(items)
+        return asyncio.run(ingest_feed_items(items))
     except Exception as e:  # noqa: BLE001 — fetch flow must never break on KG
         logger.debug("KG auto-ingest skipped: %s", e)
         return None
