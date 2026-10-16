@@ -17,7 +17,7 @@ pip install freshrss-agent
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`agent-utilities[mcp]`) |
+| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
 | `agent` | `pip install "freshrss-agent[agent]"` | Pydantic-AI agent + Logfire tracing |
 | `all` | `pip install "freshrss-agent[all]"` | Everything above |
 

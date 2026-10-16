@@ -5,11 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "freshrss-agent"
 version = "2.1.0"
-description = "FreshRSS API + MCP Server + A2A Server"
+description = "FreshRSS API + MCP Server"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12, <3.15"
-dependencies = [ "agent-connector-sdk>=0.1.0,<1.0.0", "agent-utilities>=2.0.0", "python-dotenv>=1.2.2",]
+dependencies = [ "agent-connector-sdk>=0.2.0,<1.0.0", "python-dotenv>=1.2.2", "requests>=2.32.0",]
 [[project.authors]]
 name = "Audel Rouhi"
 email = "knucklessg1@gmail.com"
@@ -18,26 +18,24 @@ email = "knucklessg1@gmail.com"
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-utilities[mcp]>=2.0.0",]
-agent = [ "agent-utilities[agent-runtime,logfire]>=2.0.0",]
+mcp = [ "agent-connector-sdk>=0.2.0,<1.0.0",]
 all = [ "freshrss-agent[mcp,agent,logfire]>=2.1.0",]
 test = [
     "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
 
 [project.scripts]
 freshrss-mcp = "freshrss_agent.mcp_server:mcp_server"
-freshrss-agent = "freshrss_agent.agent_server:agent_server"
 
-[project.entry-points."agent_utilities.skill_providers"]
+[project.entry-points."agent_connector_sdk.skill_providers"]
 freshrss-agent = "freshrss_agent.skills"
 
-[project.entry-points."agent_utilities.prompt_providers"]
+[project.entry-points."agent_connector_sdk.prompt_providers"]
 freshrss-agent = "freshrss_agent.prompts"
 
-[project.entry-points."agent_utilities.ontology_providers"]
+[project.entry-points."agent_connector_sdk.ontology_providers"]
 freshrss-agent = "freshrss_agent.ontology"
 
-[project.entry-points."agent_utilities.source_connector_providers"]
+[project.entry-points."agent_connector_sdk.source_connector_providers"]
 freshrss-agent = "freshrss_agent.connectors"
 
 [tool.uv.workspace]
@@ -51,9 +49,6 @@ override-dependencies = [
     "fastmcp-slim[client,server]>=4.0.0b1",
 ]
 
-[tool.uv.sources]
-agent-connector-sdk = { path = ".uv-workspace-siblings/agent-connector-sdk", editable = true }
-agent-utilities = { path = ".uv-workspace-siblings/agent-utilities", editable = true }
 
 [tool.ruff]
 line-length = 88
@@ -84,7 +79,7 @@ ignore_names = ["request", "config"]
 
 # Minimal residue for a2a.json generation (CONCEPT:AU-KG.ontology.a2a-card-generation,
 # D-OB-1): everything else in a2a.json is derived from this file's [project] table
-# by agent-utilities' generate_connector_manifests.py — a2a.json itself is a
+# by agent-connector-sdk' generate_connector_manifests.py — a2a.json itself is a
 # generated artifact, never hand-edited. These two capabilities are genuinely
 # per-connector (FreshRSS-specific read/curate actions) and have no other
 # canonical source, so they are declared here instead.

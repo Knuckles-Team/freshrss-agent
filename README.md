@@ -64,7 +64,7 @@ This repository is actively maintained - Contributions are welcome!
 
 > **Install the slim `[mcp]` extra.** All MCP examples below install
 > `freshrss-agent[mcp]` — the MCP-server extra that pulls only the FastMCP /
-> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> FastAPI tooling (`agent-connector-sdk`). It deliberately **excludes** the heavy
 > agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
 > `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
 > Use the full `[agent]` extra only when the operator need the integrated Pydantic AI agent
@@ -140,7 +140,7 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `INGESTTOOL` | `True` |  |
 | `FRESHRSS_KG_AUTO_INGEST` | `True` | gates opportunistic KG writeback in api_client_reader.py; default on |
 
-#### Inherited agent-utilities variables (apply to every connector)
+#### Inherited agent-connector-sdk variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
@@ -161,7 +161,7 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
@@ -203,7 +203,7 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
 <!-- MCP-CONFIG-EXAMPLES:START -->
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `freshrss-agent[mcp]` to add
-> FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
+> FastMCP / FastAPI through `agent-connector-sdk`; the required Agent Connector SDK core
 > still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
@@ -366,8 +366,8 @@ Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `freshrss-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | The operator only run the **MCP server** (smallest install / image) |
-| `freshrss-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | The operator run the **integrated agent** |
+| `freshrss-agent[mcp]` | Slim MCP server only (`agent-connector-sdk` — FastMCP/FastAPI) | The operator only run the **MCP server** (smallest install / image) |
+| `freshrss-agent[agent]` | Full agent runtime (`agent-connector-sdk` — Pydantic AI + the epistemic-graph engine) | The operator run the **integrated agent** |
 | `freshrss-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -408,7 +408,7 @@ agent (`:2.1.0`) with a co-located `:mcp` sidecar.
 ### Knowledge-graph database (`epistemic-graph`)
 
 The **full agent** (`[agent]` / `:2.1.0`) embeds the **epistemic-graph** engine (pulled in
-transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+transitively via `agent-connector-sdk`). For production — or to share one knowledge graph
 across multiple agents — run **epistemic-graph as its own database container** and point the
 agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
 config, and the full database architecture (with diagrams) are documented in the

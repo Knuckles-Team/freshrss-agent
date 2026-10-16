@@ -13,7 +13,6 @@ CORE_MODULES = [
 ]
 
 OPTIONAL_MODULES = {
-    "freshrss_agent.agent_server": "agent",
     "freshrss_agent.mcp_server": "mcp",
 }
 

@@ -1,7 +1,7 @@
 # freshrss-agent — Concept Overview
 
 > **Category**: Integration | **Ecosystem Role**: MCP Server + A2A Agent
-> Built on [`agent-utilities`](https://github.com/Knuckles-Team/agent-utilities) — the unified AGI Harness.
+> Built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) — the unified AGI Harness.
 
 ## Description
 
@@ -11,7 +11,7 @@
 `freshrss_reader` (stream contents, item bodies, unread counts) and
 `freshrss_subscriptions` (subscribe/unsubscribe/label feeds, browse categories,
 mark items read or starred) — plus a Python API and an A2A agent. The reader's
-`stream_contents` action is consumed directly by the agent-utilities Knowledge
+`stream_contents` action is consumed directly by the agent-connector-sdk Knowledge
 Graph connector preset to ingest feed items.
 
 ## Architecture
@@ -31,7 +31,7 @@ This project implements or inherits the following ecosystem concepts:
 
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
-| ECO-4.1 | MCP & Universal Skills | `agent-utilities` (inherited) |
-| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `agent-utilities` (inherited) |
+| ECO-4.1 | MCP & Universal Skills | `agent-connector-sdk` (inherited) |
+| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `agent-connector-sdk` (inherited) |
 
-> 📖 **Full Registry**: See [`agent-utilities/docs/overview.md`](https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
+> 📖 **Full Registry**: See [`agent-connector-sdk/docs/overview.md`](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.

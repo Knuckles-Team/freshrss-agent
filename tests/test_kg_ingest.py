@@ -116,7 +116,7 @@ async def test_ingest_feed_items_maps_to_documents(ingest):
     assert record.payload["title"] == "Big News"
     # `source_uri` is one of the PersistencePrivacyGuard `_LOCATION_FIELDS` and is
     # blanket-redacted at persistence time regardless of content — same behavior as
-    # the old agent_utilities guard; the real URL survives on the non-reserved
+    # the old agent_connector_sdk guard; the real URL survives on the non-reserved
     # `itemUrl` field the mapper also stamps.
     assert record.payload["source_uri"] == "[REDACTED_LOCATION]"
     assert record.payload["itemUrl"] == "https://example.com/a"

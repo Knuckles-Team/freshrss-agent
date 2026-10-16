@@ -1,6 +1,6 @@
 # freshrss-agent
 
-FreshRSS **API + MCP Server + A2A Agent** for the agent-utilities ecosystem — a
+FreshRSS **API + MCP Server + A2A Agent** for the agent-connector-sdk ecosystem — a
 typed, action-routed connector.
 
 !!! info "Official documentation"

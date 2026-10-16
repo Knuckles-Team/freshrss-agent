@@ -4,7 +4,7 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "freshrss-agent",
-  "extends": "agent-utilities:base",
+  "extends": "agent-connector-sdk:base",
   "compose": "append",
   "description": "FreshRSS feed-intelligence specialist: read streams, curate subscriptions, and ingest feed items into the knowledge graph over the freshrss-agent MCP server.",
   "metadata": {
