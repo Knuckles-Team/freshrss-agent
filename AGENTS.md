@@ -11,18 +11,8 @@
     - `freshrss_agent/api/`: Modular folder for target service client wrappers.
     - `freshrss_agent/mcp/`: Modular folder for action-routed dynamic MCP tool tags.
     - `freshrss_agent/mcp_server.py`: Main MCP server entry point and tool registration.
-    - `freshrss_agent/agent_server.py`: Pydantic AI agent definition and logic.
 
 ### Architecture Diagram
-```mermaid
-graph TD
-    User([User/A2A]) --> Server[A2A Server / FastAPI]
-    Server --> Agent[Pydantic AI Agent]
-    Agent --> Skills[Modular Skills]
-    Agent --> MCP[MCP Server / FastMCP]
-    MCP --> Client[API Client / Wrapper]
-    Client --> ExternalAPI([External Service API])
-```
 
 ### Workflow Diagram
 ```mermaid
@@ -58,7 +48,6 @@ freshrss-agent
 
 ## Project Structure Quick Reference
 - MCP Entry Point → `freshrss_agent/mcp_server.py`
-- Agent Entry Point → `freshrss_agent/agent_server.py`
 - Source Code → `freshrss_agent/`
 - API client mixins → `freshrss_agent/api/`
 - MCP tool modules → `freshrss_agent/mcp/`
@@ -67,7 +56,6 @@ freshrss-agent
 
 ## Code Style & Conventions
 **Always:**
-- Use `agent-connector-sdk` for common patterns (e.g., `create_mcp_server`, `create_agent_server`).
 - Define input/output models using Pydantic.
 - Include descriptive docstrings for all tools (they are used as tool descriptions for LLMs).
 - Check for optional dependencies using `try/except ImportError`.
@@ -89,7 +77,6 @@ freshrss-agent
 - Use `agent-connector-sdk` base classes.
 
 **Ask first:**
-- Major refactors of `mcp_server.py` or `agent_server.py`.
 - Removing or renaming public tool functions.
 
 **Never do:**

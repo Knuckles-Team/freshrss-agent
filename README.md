@@ -1,5 +1,5 @@
 # FreshRSS
-## CLI or API | MCP | Agent
+## CLI or API | MCP
 
 ![PyPI - Version](https://img.shields.io/pypi/v/freshrss-agent)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
@@ -11,7 +11,6 @@
 *Version: 2.1.0*
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> interfaces, the integrated A2A agent server, and guidance for provisioning the
 > backing platform are maintained in the
 > [official documentation](https://knuckles-team.github.io/freshrss-agent/).
 
@@ -34,8 +33,6 @@
 
 ## Overview
 
-**FreshRSS MCP Server + A2A Agent**
-
 A connector for the self-hosted [FreshRSS](https://freshrss.org/) RSS reader,
 wrapping its **Google Reader compatible API** (GReader). It exposes two
 action-routed MCP tool domains:
@@ -55,7 +52,6 @@ This repository is actively maintained - Contributions are welcome!
   transparent re-authentication on `401`, and automatic write-token handling.
 - **Enterprise-Grade Security:** OIDC token delegation (RFC 8693), Eunomia policy
   enforcement, and per-instance credential resolution.
-- **Integrated A2A Agent:** Built-in Pydantic AI agent server alongside the MCP server.
 - **Native Telemetry & Tracing:** Out-of-the-box OpenTelemetry exports and Langfuse tracing.
 
 ---
@@ -67,7 +63,6 @@ This repository is actively maintained - Contributions are welcome!
 > FastAPI tooling (`agent-connector-sdk`). It deliberately **excludes** the heavy
 > agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
 > `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
-> Use the full `[agent]` extra only when the operator need the integrated Pydantic AI agent
 > (see [Installation](#installation)).
 
 ### Available MCP Tools
@@ -159,11 +154,9 @@ Detailed tool schemas, parameter shapes, and validation constraints are preserve
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
 | `PROVIDER` | — | Operator-configured LLM provider for the agent |
 | `MODEL_ID` | — | Operator-configured model id for the agent |
-| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
 _20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
-
 
 Every variable the server reads. A copy-paste template lives in [`.env.example`](.env.example).
 
@@ -367,15 +360,11 @@ Pick the extra that matches what the operator want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `freshrss-agent[mcp]` | Slim MCP server only (`agent-connector-sdk` — FastMCP/FastAPI) | The operator only run the **MCP server** (smallest install / image) |
-| `freshrss-agent[agent]` | Full agent runtime (`agent-connector-sdk` — Pydantic AI + the epistemic-graph engine) | The operator run the **integrated agent** |
 | `freshrss-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
 # MCP server only (recommended for tool hosting — slim deps)
 uv pip install "freshrss-agent[mcp]"
-
-# Full agent runtime (Pydantic AI + epistemic-graph engine)
-uv pip install "freshrss-agent[agent]"
 
 # Everything (development)
 uv pip install "freshrss-agent[all]"      # or: python -m pip install "freshrss-agent[all]"
@@ -385,29 +374,22 @@ After installation two console scripts are available:
 
 ```bash
 freshrss-mcp      # run the MCP server
-freshrss-agent    # run the A2A agent server
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container images (`:mcp`)
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
-| `knucklessg1/freshrss-agent:mcp` | `--target mcp` | `freshrss-agent[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `freshrss-mcp` |
-| `knucklessg1/freshrss-agent:2.1.0` | `--target agent` (default) | `freshrss-agent[agent]` — **full** agent runtime + epistemic-graph engine | `freshrss-agent` |
 
 ```bash
-docker build --target mcp   -t knucklessg1/freshrss-agent:mcp    docker/   # slim MCP server
-docker build --target agent -t knucklessg1/freshrss-agent:2.1.0 docker/   # full agent
 ```
 
-`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
 agent (`:2.1.0`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-The **full agent** (`[agent]` / `:2.1.0`) embeds the **epistemic-graph** engine (pulled in
 transitively via `agent-connector-sdk`). For production — or to share one knowledge graph
 across multiple agents — run **epistemic-graph as its own database container** and point the
 agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
@@ -425,7 +407,6 @@ Full installation, deployment, usage, and platform-provisioning guides live in t
   [Usage](docs/usage.md) · [Deployment](docs/deployment.md) ·
   [Platform](docs/platform.md) · [Concepts](docs/concepts.md)
 
-
 <!-- BEGIN agent-os-genesis-deploy (generated; do not edit between markers) -->
 
 ## Deploy with `agent-os-genesis`
@@ -440,7 +421,6 @@ to just this package. Ask your agent to **"deploy `freshrss-agent` with agent-os
 |------|---------|
 | Bare-metal, prod (PyPI) | `uvx freshrss-mcp` · or `uv tool install freshrss-agent` |
 | Bare-metal, dev (editable) | `uv pip install -e ".[all]"` · or `pip install -e ".[all]"` |
-| Container, prod | deploy `knucklessg1/freshrss-agent:2.1.0` via docker-compose / swarm / podman / podman-compose / kubernetes |
 | Container, dev (editable) | deploy `docker/compose.dev.yml` (source-mounted at `/src`; edits live on restart) |
 
 Secrets are read-existing + seeded via `vault_sync` — you are only prompted for what's missing.

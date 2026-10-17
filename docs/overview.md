@@ -1,6 +1,5 @@
 # freshrss-agent — Concept Overview
 
-> **Category**: Integration | **Ecosystem Role**: MCP Server + A2A Agent
 > Built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) — the unified AGI Harness.
 
 ## Description
@@ -10,7 +9,6 @@
 `{FRESHRSS_URL}/api/greader.php`). It exposes two action-routed MCP tool domains —
 `freshrss_reader` (stream contents, item bodies, unread counts) and
 `freshrss_subscriptions` (subscribe/unsubscribe/label feeds, browse categories,
-mark items read or starred) — plus a Python API and an A2A agent. The reader's
 `stream_contents` action is consumed directly by the agent-connector-sdk Knowledge
 Graph connector preset to ingest feed items.
 
@@ -22,8 +20,6 @@ This project follows the standardized agent-package pattern:
   tool modules) for cleaner organization.
 - **Dynamic Tool Registration**: action-routed dynamic tool tags, strictly
   lowercase, each togglable with a `*TOOL` environment flag.
-- **A2A Agent Server**: a Pydantic-AI graph agent (console script `freshrss-agent`)
-  that calls the MCP tool surface and exposes an AG-UI web interface.
 
 ## Concept Registry
 
@@ -32,6 +28,5 @@ This project implements or inherits the following ecosystem concepts:
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
 | ECO-4.1 | MCP & Universal Skills | `agent-connector-sdk` (inherited) |
-| AU-ECO.toolkit.journey-map-narrative | A2A Network & Consensus | `agent-connector-sdk` (inherited) |
 
 > 📖 **Full Registry**: See [`agent-connector-sdk/docs/overview.md`](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.

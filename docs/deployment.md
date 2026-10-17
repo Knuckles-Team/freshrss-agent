@@ -3,7 +3,6 @@
 This page covers running `freshrss-agent` as long-lived servers.
 
 > `freshrss-agent` ships both an **MCP server** (console script `freshrss-mcp`) and an
-> **A2A agent server** (console script `freshrss-agent`).
 
 <!-- BEGIN GENERATED: deployment-options -->
 ## Deployment Options
@@ -40,7 +39,6 @@ matching `mcp_config.json` below.
 ### 2. Streamable-HTTP (local process)
 
 ```bash
-uvx --from freshrss-agent freshrss-mcp --transport streamable-http --host 0.0.0.0 --port 8000
 curl -s http://localhost:8000/health        # {"status":"OK"}
 ```
 
@@ -70,7 +68,6 @@ daemonless runtime):
         "-e", "FRESHRSS_URL=https://service.example.com",
         "-e", "FRESHRSS_USER=admin",
         "-e", "FRESHRSS_API_PASSWORD=your_api_password",
-        "knucklessg1/freshrss-agent:2.1.0"
       ]
     }
   }
@@ -112,11 +109,4 @@ streamable-http listener.
 
 ```bash
 docker compose -f docker/mcp.compose.yml up -d      # MCP server only
-docker compose -f docker/agent.compose.yml up -d    # MCP + agent
-```
-
-## Run the A2A agent server
-
-```bash
-freshrss-agent --mcp-config mcp_config.json --web
 ```
