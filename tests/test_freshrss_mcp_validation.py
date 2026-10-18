@@ -23,8 +23,9 @@ def test_mcp_instance_registers_reader_and_subscriptions(monkeypatch):
 
     tools = asyncio.run(mcp.list_tools())
     tool_names = {tool.name for tool in tools}
-    assert "freshrss_reader" in tool_names
-    assert "freshrss_subscriptions" in tool_names
+    assert "freshrss_stream_contents" in tool_names
+    assert "freshrss_reader" not in tool_names
+    assert "freshrss_subscriptions" not in tool_names
 
 
 @pytest.mark.concept("FR-OS.governance.frss")
@@ -39,10 +40,8 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
     preset = preset_document["freshrss"]
     assert preset == {
         "server": "freshrss-mcp",
-        "tool": "freshrss_reader",
-        "action": "stream_contents",
-        "params_style": "json",
-        "params": {"count": 100, "order": "o"},
+        "tool": "freshrss_stream_contents",
+        "params_style": "args",
         "records_path": "items",
         "id_field": "id",
         "title_field": "title",
@@ -53,12 +52,13 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
         "cursor_param": "continuation",
         "cursor_path": "continuation",
         "doc_type": "news_article",
+        "arguments": {"count": 100, "order": "o"},
     }
 
     monkeypatch.setattr("sys.argv", ["freshrss-mcp"])
     mcp, _args, _middlewares = get_mcp_instance()
     tools = asyncio.run(mcp.list_tools())
-    reader = next(tool for tool in tools if tool.name == "freshrss_reader")
+    reader = next(tool for tool in tools if tool.name == "freshrss_stream_contents")
     expected = tool_fingerprint(reader.to_mcp_tool())
     sidecar = json.loads(
         (CONNECTORS / "tool_schema_fingerprints.json").read_text(encoding="utf-8")
@@ -67,5 +67,5 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
         "algorithm": COMPATIBILITY_FINGERPRINT_ALGORITHM,
         "connector": "freshrss-agent",
         "schema_version": "1",
-        "tools": {"freshrss_reader": expected},
+        "tools": {"freshrss_stream_contents": expected},
     }
