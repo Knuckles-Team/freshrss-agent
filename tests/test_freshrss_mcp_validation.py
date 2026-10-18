@@ -3,9 +3,9 @@ import json
 from pathlib import Path
 
 import pytest
+from agent_connector_sdk.certify.fingerprints import tool_fingerprint
 from agent_connector_sdk.manifest.tool_schema import (
-    canonical_input_schema,
-    compatibility_fingerprint,
+    COMPATIBILITY_FINGERPRINT_ALGORITHM,
 )
 
 from freshrss_agent.mcp_server import get_mcp_instance
@@ -59,15 +59,12 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
     mcp, _args, _middlewares = get_mcp_instance()
     tools = asyncio.run(mcp.list_tools())
     reader = next(tool for tool in tools if tool.name == "freshrss_reader")
-    expected = compatibility_fingerprint(
-        reader.name,
-        canonical_input_schema(reader, include_presentation=False),
-    )
+    expected = tool_fingerprint(reader.to_mcp_tool())
     sidecar = json.loads(
         (CONNECTORS / "tool_schema_fingerprints.json").read_text(encoding="utf-8")
     )
     assert sidecar == {
-        "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+        "algorithm": COMPATIBILITY_FINGERPRINT_ALGORITHM,
         "connector": "freshrss-agent",
         "schema_version": "1",
         "tools": {"freshrss_reader": expected},

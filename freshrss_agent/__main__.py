@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from freshrss_agent.agent_server import agent_server
+from freshrss_agent.mcp_server import mcp_server
 
 if __name__ == "__main__":
-    agent_server()
+    mcp_server()

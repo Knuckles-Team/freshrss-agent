@@ -9,7 +9,7 @@ Priority:
 2. **Fixed credentials** — falls back to the ``FRESHRSS_API_PASSWORD`` env var.
 
 For a multi-tenant service, add an ``instances.py`` that resolves a configured
-instance NAME (from ``<service>_instances`` in ``~/.config/agent-utilities/config.json``)
+instance NAME (from ``<service>_instances`` in ``~/.config/agent-connector-sdk/config.json``)
 to ``(url, token, tls_profile)`` and call it here before the delegation/fixed paths — see
 ``gitlab_api.instances`` (CONCEPT:AU-KG.backend.declared-columns-so-schema) for the golden pattern.
 """

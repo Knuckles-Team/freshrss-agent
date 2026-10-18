@@ -17,8 +17,7 @@ pip install freshrss-agent
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`agent-utilities[mcp]`) |
-| `agent` | `pip install "freshrss-agent[agent]"` | Pydantic-AI agent + Logfire tracing |
+| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
 | `all` | `pip install "freshrss-agent[all]"` | Everything above |
 
 ## From source
@@ -32,5 +31,4 @@ pip install -e ".[all]"
 ## Docker
 
 ```bash
-docker pull knucklessg1/freshrss-agent:2.1.0
 ```

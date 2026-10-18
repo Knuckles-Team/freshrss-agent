@@ -32,7 +32,7 @@ WORKDIR /app
 COPY . /app
 
 # Compile and install package in-place
-RUN uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow .[agent]
+RUN uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow .[mcp]
 
 COPY docker/starship.toml /root/.config/starship.toml
 
