@@ -8,7 +8,7 @@
 ![PyPI - License](https://img.shields.io/pypi/l/freshrss-agent)
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/freshrss-agent)
 
-*Version: 2.2.0*
+*Version: 2.2.1*
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > backing platform are maintained in the
@@ -386,7 +386,7 @@ One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 ```bash
 ```
 
-agent (`:2.2.0`) with a co-located `:mcp` sidecar.
+agent (`:2.2.1`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
