@@ -90,8 +90,8 @@ schema_mappings:
 sync:
 - preset: freshrss
   server: freshrss-mcp
-  tool: freshrss_reader
-  action: stream_contents
+  tool: freshrss_stream_contents
+  action: null
   records_path: items
   id_field: id
   title_field: title
@@ -99,11 +99,10 @@ sync:
   updated_field: published
   pagination: cursor
   doc_type: news_article
-  tool_schema_sha256: 853fb6e29803342a2b48e6000d1669a50b029a6414cf36f64fffd035d5838f5f
+  tool_schema_sha256: 88ba855655962d268481c22775388c96a92c5875536d407a56e91c29ee4f72b4
   raw:
     server: freshrss-mcp
-    tool: freshrss_reader
-    action: stream_contents
+    tool: freshrss_stream_contents
     params_style: json
     params:
       count: 100

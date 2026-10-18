@@ -3,6 +3,6 @@
   "connector": "freshrss-agent",
   "schema_version": "1",
   "tools": {
-    "freshrss_reader": "853fb6e29803342a2b48e6000d1669a50b029a6414cf36f64fffd035d5838f5f"
+    "freshrss_stream_contents": "88ba855655962d268481c22775388c96a92c5875536d407a56e91c29ee4f72b4"
   }
 }

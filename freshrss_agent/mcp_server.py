@@ -17,7 +17,7 @@ from .mcp import (  # noqa: F401
     register_subscriptions_tools,
 )
 
-__version__ = "2.2.1"
+__version__ = "2.3.0"
 
 logger = get_logger(name="MCP_Server")
 logger.setLevel(logging.INFO)
