@@ -1,9 +1,9 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "2743e5256698ceb953ec69f3dbf8c007c939827f63150f936ccb032ae52ef999",
+    "connector_manifest.yml": "4cb5bedbc867ad1cc12b64de7b8a5978cccf39463f3559b9c798a66ecec507fc",
     "freshrss_agent/connectors/mcp_source_presets.json": "d57c9fa227644bce90278860ac997ca416b9c90a0aabe27161a38a8137468004",
-    "freshrss_agent/connectors/tool_schema_fingerprints.json": "5b4c8afda0f17f72048e26c8d3e3de3bf17cfb2f095c14844b92acad4adcb7a7",
+    "freshrss_agent/connectors/tool_schema_fingerprints.json": "03b79ad988677a9f84d3547babf6445b461e0aef28f736a9fb33ab25583cee26",
     "freshrss_agent/ontology/feed.ttl": "8da01dda3230a5c0114c2c743c544d2b13e123ba0357c6e0cf568f15e0837ad2",
     "freshrss_agent/ontology/fixtures/records.json": "08bb9b7cd11ab52490a6b3197a6194bba2152bcd89dae876d7d7630714e75846",
     "freshrss_agent/ontology/mappings/source.yaml": "ed8866d5e5a1c9a35baf2c49f5542110982e3f4c6266fa77838ca174b01bdf6b",
@@ -22,7 +22,7 @@
     "bundle_schema": "2",
     "epistemic_graph": ">=2.27.0,<3"
   },
-  "connector": "freshrss-agent",
+  "connector": "freshrss-mcp",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
