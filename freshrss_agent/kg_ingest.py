@@ -45,7 +45,7 @@ logger = logging.getLogger("freshrss_agent.kg")
 _SOURCE = "freshrss-agent"
 _DOMAIN = "freshrss"
 
-_BINDING = IngestBinding(connector="freshrss-agent", stream=_DOMAIN)
+_BINDING = IngestBinding(connector="freshrss-mcp", stream=_DOMAIN)
 
 
 def _to_entity(record: dict[str, Any]) -> Entity:
@@ -58,9 +58,7 @@ def _to_entity(record: dict[str, Any]) -> Entity:
 
 def _to_relationship(record: dict[str, Any]) -> Relationship:
     props = {
-        k: v
-        for k, v in record.items()
-        if k not in ("source", "target", "relationship")
+        k: v for k, v in record.items() if k not in ("source", "target", "relationship")
     }
     return Relationship(
         source=record["source"],
