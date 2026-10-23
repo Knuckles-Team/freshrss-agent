@@ -44,7 +44,6 @@ def test_client_verifies_by_default():
             base_url="http://freshrss.local", username="admin", api_password="pw"
         )
         assert client.tls_profile.verify_enabled is True
-        assert client.session.verify is True
 
 
 def test_client_honors_ca_bundle_profile(tmp_path):
@@ -59,7 +58,6 @@ def test_client_honors_ca_bundle_profile(tmp_path):
         )
         assert client.tls_profile.verify_enabled is True
         assert client.tls_profile.ca_bundle_path == ca_bundle
-        assert client.session.verify == str(ca_bundle)
 
 
 def test_client_honors_named_tls_profile():

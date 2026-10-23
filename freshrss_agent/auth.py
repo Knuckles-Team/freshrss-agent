@@ -18,6 +18,8 @@ import logging
 
 from agent_connector_sdk.config import setting
 from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.http.client import create_http_client
+from agent_connector_sdk.http.options import HttpClientOptions
 from agent_connector_sdk.tls.profile import ResolvedTLSProfile
 from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
@@ -63,13 +65,15 @@ def get_client(
 
     # --- Path 1: OIDC Delegation (RFC 8693 Token Exchange) ---
     if enabled:
-        import httpx
-
         try:
             subject_token = current_user_token()
             if not subject_token:
                 raise AuthError("no verified caller token to delegate")
-            with httpx.Client(timeout=30) as http_client:
+            with create_http_client(
+                HttpClientOptions(
+                    base_url=delegation_settings.token_endpoint, tls=tls_profile
+                )
+            ) as http_client:
                 access_token = exchange_token(
                     delegation_settings,
                     subject_token=subject_token,
