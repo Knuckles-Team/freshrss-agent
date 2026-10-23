@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "spec_id": "CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT",
+  "owner_repo": "freshrss-agent",
+  "delivery_state": "VERIFIED",
+  "requirement_ids": [
+    "CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT-R001"
+  ],
+  "requirements": [
+    {
+      "id": "CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT-R001",
+      "title": "Default content",
+      "delivery_state": "VERIFIED",
+      "landed_in": [
+        "0e2a13a2287b"
+      ],
+      "verified_by": [
+        "tests/test_default_content_surfaces.py:15"
+      ]
+    }
+  ]
+}

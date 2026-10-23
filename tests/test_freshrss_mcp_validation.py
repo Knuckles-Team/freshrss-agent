@@ -65,7 +65,7 @@ def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypa
     )
     assert sidecar == {
         "algorithm": COMPATIBILITY_FINGERPRINT_ALGORITHM,
-        "connector": "freshrss-agent",
+        "connector": "freshrss-mcp",
         "schema_version": "1",
         "tools": {"freshrss_stream_contents": expected},
     }
