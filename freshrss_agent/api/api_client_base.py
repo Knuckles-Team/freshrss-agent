@@ -4,8 +4,10 @@
 import logging
 from typing import Any
 
-import requests
+import httpx
 from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
+from agent_connector_sdk.http.client import create_http_client
+from agent_connector_sdk.http.options import HttpClientOptions
 from agent_connector_sdk.tls.profile import ResolvedTLSProfile
 from agent_connector_sdk.tls.resolve import resolve_tls_profile
 from agent_connector_sdk.utilities import get_logger
@@ -35,7 +37,13 @@ class FreshRSSClientBase:
         self.username = username or ""
         self.api_password = api_password or ""
         self.tls_profile = tls_profile or resolve_tls_profile("freshrss")
-        self.session = self.tls_profile.configure_requests_session(requests.Session())
+        self.session = create_http_client(
+            HttpClientOptions(
+                base_url=self.base_url,
+                tls=self.tls_profile,
+                allow_plaintext=self.base_url.startswith("http://"),
+            )
+        )
         self._auth_token: str | None = None
 
     # -- internals -----------------------------------------------------------
@@ -103,7 +111,7 @@ class FreshRSSClientBase:
         params.setdefault("output", "json")
         url = self._greader_url(path)
 
-        def _send() -> requests.Response:
+        def _send() -> httpx.Response:
             return self.session.request(
                 method,
                 url,
