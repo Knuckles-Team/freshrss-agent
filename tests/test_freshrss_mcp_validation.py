@@ -1,12 +1,7 @@
 import asyncio
-import json
 from pathlib import Path
 
 import pytest
-from agent_connector_sdk.certify.fingerprints import tool_fingerprint
-from agent_connector_sdk.manifest.tool_schema import (
-    COMPATIBILITY_FINGERPRINT_ALGORITHM,
-)
 
 from freshrss_agent.mcp_server import get_mcp_instance
 
@@ -26,46 +21,3 @@ def test_mcp_instance_registers_reader_and_subscriptions(monkeypatch):
     assert "freshrss_stream_contents" in tool_names
     assert "freshrss_reader" not in tool_names
     assert "freshrss_subscriptions" not in tool_names
-
-
-@pytest.mark.concept("FR-OS.governance.frss")
-def test_source_preset_is_provider_owned_and_matches_live_reader_schema(monkeypatch):
-    """The source contract and schema pin describe the real FreshRSS reader."""
-    preset_document = json.loads(
-        (CONNECTORS / "mcp_source_presets.json").read_text(encoding="utf-8")
-    )
-    assert set(key for key in preset_document if not key.startswith("_")) == {
-        "freshrss"
-    }
-    preset = preset_document["freshrss"]
-    assert preset == {
-        "server": "freshrss-mcp",
-        "tool": "freshrss_stream_contents",
-        "params_style": "args",
-        "records_path": "items",
-        "id_field": "id",
-        "title_field": "title",
-        "text_field": "text",
-        "updated_field": "published",
-        "updated_since_param": "newer_than",
-        "pagination": "cursor",
-        "cursor_param": "continuation",
-        "cursor_path": "continuation",
-        "doc_type": "news_article",
-        "arguments": {"count": 100, "order": "o"},
-    }
-
-    monkeypatch.setattr("sys.argv", ["freshrss-mcp"])
-    mcp, _args, _middlewares = get_mcp_instance()
-    tools = asyncio.run(mcp.list_tools())
-    reader = next(tool for tool in tools if tool.name == "freshrss_stream_contents")
-    expected = tool_fingerprint(reader.to_mcp_tool())
-    sidecar = json.loads(
-        (CONNECTORS / "tool_schema_fingerprints.json").read_text(encoding="utf-8")
-    )
-    assert sidecar == {
-        "algorithm": COMPATIBILITY_FINGERPRINT_ALGORITHM,
-        "connector": "freshrss-mcp",
-        "schema_version": "1",
-        "tools": {"freshrss_stream_contents": expected},
-    }

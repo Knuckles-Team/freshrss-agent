@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "freshrss-agent"
-version = "2.3.3"
+version = "2.3.4"
 description = "FreshRSS API + MCP Server"
 readme = "README.md"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: MIT License", "Environment :: Console", "Operating System :: POSIX :: Linux", "Programming Language :: Python :: 3",]
 requires-python = ">=3.12, <3.15"
-dependencies = [ "agent-connector-sdk[mcp]>=0.3.18,<1.0.0", "python-dotenv>=1.2.4", ]
+dependencies = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0", "python-dotenv>=1.2.4", ]
 [[project.authors]]
 name = "Audel Rouhi"
 email = "knucklessg1@gmail.com"
@@ -18,7 +18,7 @@ email = "knucklessg1@gmail.com"
 text = "MIT"
 
 [project.optional-dependencies]
-mcp = [ "agent-connector-sdk[mcp]>=0.3.18,<1.0.0",]
+mcp = [ "agent-connector-sdk[mcp]>=0.4.1,<1.0.0",]
 all = [ "freshrss-agent[mcp]>=2.1.0",]
 test = [
     "pytest-xdist>=3.8.0", "pytest>=9.1.1", "pytest-asyncio>=1.4.0", "pytest-cov>=7.1.0",]
@@ -34,9 +34,6 @@ freshrss-agent = "freshrss_agent.prompts"
 
 [project.entry-points."agent_connector_sdk.ontology_providers"]
 freshrss-agent = "freshrss_agent.ontology"
-
-[project.entry-points."agent_connector_sdk.source_connector_providers"]
-freshrss-agent = "freshrss_agent.connectors"
 
 # The one declared connector identity: the fleet name (SDK-CONNECTOR-CONTROL-R071).
 [project.entry-points."agent_connector_sdk.connector"]
@@ -81,12 +78,6 @@ where = [ ".",]
 [tool.vulture]
 ignore_names = ["request", "config", "connector", "stream"]
 
-# Minimal residue for a2a.json generation (CONCEPT:AU-KG.ontology.a2a-card-generation,
-# D-OB-1): everything else in a2a.json is derived from this file's [project] table
-# by agent-connector-sdk' generate_connector_manifests.py — a2a.json itself is a
-# generated artifact, never hand-edited. These two capabilities are genuinely
-# per-connector (FreshRSS-specific read/curate actions) and have no other
-# canonical source, so they are declared here instead.
 [[tool.a2a.capabilities]]
 id = "read_feeds"
 name = "Read RSS Feed Contents"
