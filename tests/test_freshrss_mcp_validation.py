@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from freshrss_agent.mcp_server import get_mcp_instance
+from agent_connector_sdk.connector import build_server
 
 CONNECTORS = Path(__file__).resolve().parents[1] / "freshrss_agent" / "connectors"
 
@@ -13,7 +13,7 @@ CONNECTORS = Path(__file__).resolve().parents[1] / "freshrss_agent" / "connector
 def test_mcp_instance_registers_reader_and_subscriptions(monkeypatch):
     """CONCEPT:FR-OS.identity.frss CONCEPT:FR-OS.governance.frss Both action-routed tool domains register."""
     monkeypatch.setattr("sys.argv", ["freshrss-mcp"])
-    mcp, args, middlewares = get_mcp_instance()
+    _, mcp = build_server("freshrss_agent", command_args=[])
     assert mcp is not None
 
     tools = asyncio.run(mcp.list_tools())

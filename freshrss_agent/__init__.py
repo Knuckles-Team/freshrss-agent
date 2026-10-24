@@ -51,3 +51,15 @@ for module_name, extra_name in OPTIONAL_MODULES.items():
         globals()[f"_{extra_name.upper()}_AVAILABLE"] = False
 
 __all__.extend(["_MCP_AVAILABLE", "_AGENT_AVAILABLE"])
+
+from agent_connector_sdk.connector import Connector
+
+from freshrss_agent.api import ApiClientSystem
+from freshrss_agent.auth import get_client
+
+connector = Connector(
+    api=ApiClientSystem,
+    get_client=get_client,
+    tools="freshrss_agent.mcp_server",
+    instructions="FreshRSS MCP Server — Condensed Action-Routed Tools.",
+)

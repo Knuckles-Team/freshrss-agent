@@ -1,5 +1,5 @@
 schema_version: '1'
-connector: freshrss-agent
+connector: freshrss-mcp
 ontology_source: feed
 sync:
 - preset: freshrss
