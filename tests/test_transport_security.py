@@ -54,7 +54,7 @@ def test_client_honors_ca_bundle_profile(tmp_path):
     ca_bundle.write_text(_self_signed_ca_pem("Synthetic FreshRSS Test Root"))
     with patch.dict(os.environ, {"SSL_CERT_FILE": str(ca_bundle)}, clear=True):
         client = FreshRSSApi(
-            base_url="https://freshrss.internal", username="admin", api_password="pw"
+            base_url="https://freshrss.example", username="admin", api_password="pw"
         )
         assert client.tls_profile.verify_enabled is True
         assert client.tls_profile.ca_bundle_path == ca_bundle
@@ -71,7 +71,7 @@ def test_client_honors_named_tls_profile():
     with patch.dict(
         os.environ,
         {
-            "FRESHRSS_URL": "https://freshrss.internal",
+            "FRESHRSS_URL": "https://freshrss.example",
             "FRESHRSS_API_PASSWORD": "pw",
             "FRESHRSS_TLS_PROFILE": "private-pki",
             "TLS_PROFILES": catalog,
@@ -96,14 +96,14 @@ def test_delegation_path_never_passes_verify_kwarg():
     auth_module._client = None
     fake_settings = DelegationSettings(
         enabled=True,
-        token_endpoint="https://idp.internal/token",
+        token_endpoint="https://idp.example/token",
         client_id="freshrss-agent",
         client_secret_ref="env://FAKE_CLIENT_SECRET",
-        audience="https://freshrss.internal",
+        audience="https://freshrss.example",
     )
     with patch.dict(
         os.environ,
-        {"FRESHRSS_URL": "https://freshrss.internal"},
+        {"FRESHRSS_URL": "https://freshrss.example"},
         clear=True,
     ):
         with patch(

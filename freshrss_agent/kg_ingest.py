@@ -28,6 +28,7 @@ import re
 import time
 from typing import Any
 
+from agent_connector_sdk.connector_identity import connector_name
 from agent_connector_sdk.ingest import (
     ChangeSet,
     Document,
@@ -42,7 +43,7 @@ from agent_connector_sdk.ingest import (
 
 logger = logging.getLogger("freshrss_agent.kg")
 
-_SOURCE = "freshrss-agent"
+_SOURCE = connector_name("freshrss_agent")
 _DOMAIN = "freshrss"
 
 _BINDING = IngestBinding(connector="freshrss-mcp", stream=_DOMAIN)
