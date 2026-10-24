@@ -13,3 +13,5 @@ Read the existing specs first. Extend the spec that owns the behavior. Create a 
 ## Local specifications
 
 - [`CONN-FRESHRSS-AGENT-SDK-CENTRALIZATION`](sdk-centralization/spec.md) — Move HTTP transport and pagination onto the shared SDK.
+- [`CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT`](connector-content/spec.md) — The connector serves its packaged content.
+- [`CONN-FRESHRSS-AGENT-CONNECTOR-IDENTITY`](connector-identity/spec.md) — The connector is filed under its fleet name.

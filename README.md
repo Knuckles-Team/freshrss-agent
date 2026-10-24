@@ -8,8 +8,6 @@
 ![PyPI - License](https://img.shields.io/pypi/l/freshrss-agent)
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/freshrss-agent)
 
-*Version: 2.3.4*
-
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > backing platform are maintained in the
 > [official documentation](https://knuckles-team.github.io/freshrss-agent/).
