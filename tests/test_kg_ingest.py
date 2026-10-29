@@ -32,7 +32,9 @@ class _FakeTransport:
         self.requests: list[Any] = []
 
     async def source_status(self, connector: str, stream: str) -> Any:
-        return SimpleNamespace(accepted_checkpoint=None)
+        return SimpleNamespace(
+            connector=connector, stream=stream, accepted_checkpoint=None
+        )
 
     async def submit(self, request: Any) -> Any:
         self.requests.append(request)
@@ -65,8 +67,10 @@ async def test_ingest_entities_writes_nodes_and_edges(ingest):
     )
     assert res == {"nodes": 2, "edges": 1}
     assert {r.record_id for r in transport.requests[0].records} == {"a", "b"}
-    assert transport.requests[0].relationships[0].relation_reference.endswith(
-        "/inCategory"
+    assert (
+        transport.requests[0]
+        .relationships[0]
+        .relation_reference.endswith("/inCategory")
     )
 
 
@@ -183,7 +187,10 @@ async def test_ingest_rejects_missing_node_type_as_noop(ingest):
     # validation, which this seam reports back as a clean no-op rather than
     # propagating IngestError.
     service, transport = ingest
-    assert await ingest_entities([{"id": "a", "type": "FeedSubscription"}], ingest=service) is None
+    assert (
+        await ingest_entities([{"id": "a", "type": "FeedSubscription"}], ingest=service)
+        is None
+    )
     assert transport.requests == []
 
 
