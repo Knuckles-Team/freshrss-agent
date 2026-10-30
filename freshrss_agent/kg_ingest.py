@@ -11,7 +11,7 @@ modalities that apply to a feed reader:
   specialization) + their ``:FeedCategory`` folders and ``:inCategory`` links
   (``ingest_subscriptions``).
 
-This is a **thin mapper** over the shared ``agent_connector_sdk.ingest`` knowledge-ingest
+This is a **thin mapper** over the shared ``scion_sdk.ingest`` knowledge-ingest
 facade — the one connector write path; there is no self-contained fallback transaction
 here. The MCP tool surface must never raise when the KG stack is down, so every entry
 point stays **best-effort**: it returns ``None`` (never raises) for empty input or when
@@ -28,8 +28,8 @@ import re
 import time
 from typing import Any
 
-from agent_connector_sdk.connector_identity import connector_name
-from agent_connector_sdk.ingest import (
+from scion_sdk.connector_identity import connector_name
+from scion_sdk.ingest import (
     ChangeSet,
     Document,
     Entity,
@@ -284,7 +284,7 @@ def maybe_ingest_items(items: Any) -> dict[str, int] | None:
 
     Called from ``ReaderMixin.stream_contents``, a plain synchronous method that
     itself runs off the engine's event loop (invoked through
-    ``agent_connector_sdk.mcp.concurrency.run_blocking``'s worker thread), so this
+    ``scion_sdk.mcp.concurrency.run_blocking``'s worker thread), so this
     bridges into the async ``ingest_feed_items`` with its own short-lived event loop
     rather than requiring every caller up the stack to turn async. Controlled by the
     ``FRESHRSS_KG_AUTO_INGEST`` env flag (default on); no-ops on any failure or when

@@ -5,23 +5,23 @@
 Priority:
 1. **OIDC Delegation** (RFC 8693 Token Exchange) — when ``ENABLE_DELEGATION`` is
    active, exchanges the IdP-issued user token for a downstream access token via
-   ``agent_connector_sdk.auth.delegation``.
+   ``scion_sdk.auth.delegation``.
 2. **Fixed credentials** — falls back to the ``FRESHRSS_API_PASSWORD`` env var.
 
 For a multi-tenant service, add an ``instances.py`` that resolves a configured
-instance NAME (from ``<service>_instances`` in ``~/.config/agent-connector-sdk/config.json``)
+instance NAME (from ``<service>_instances`` in ``~/.config/scion-sdk/config.json``)
 to ``(url, token, tls_profile)`` and call it here before the delegation/fixed paths — see
 ``gitlab_api.instances`` (CONCEPT:AU-KG.backend.declared-columns-so-schema) for the golden pattern.
 """
 
 import logging
 
-from agent_connector_sdk.config import setting
-from agent_connector_sdk.exceptions import AuthError, UnauthorizedError
-from agent_connector_sdk.http.client import create_http_client
-from agent_connector_sdk.http.options import HttpClientOptions
-from agent_connector_sdk.tls.profile import ResolvedTLSProfile
-from agent_connector_sdk.tls.resolve import resolve_tls_profile
+from scion_sdk.config import setting
+from scion_sdk.exceptions import AuthError, UnauthorizedError
+from scion_sdk.http.client import create_http_client
+from scion_sdk.http.options import HttpClientOptions
+from scion_sdk.tls.profile import ResolvedTLSProfile
+from scion_sdk.tls.resolve import resolve_tls_profile
 
 from .api import ApiClientSystem
 
@@ -50,7 +50,7 @@ def get_client(
             profile_ref=setting("FRESHRSS_TLS_PROFILE_REF", "") or None,
         )
 
-    from agent_connector_sdk.auth.delegation import (
+    from scion_sdk.auth.delegation import (
         DelegationSettings,
         current_user_token,
         exchange_token,

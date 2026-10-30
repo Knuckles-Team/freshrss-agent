@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [freshrss, rss, knowledge-graph, ingestion, documents, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # FreshRSS Knowledge Ingestion

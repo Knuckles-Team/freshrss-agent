@@ -1,6 +1,6 @@
 # freshrss-agent — Concept Overview
 
-> Built on [`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk) — the unified AGI Harness.
+> Built on [`scion-sdk`](https://github.com/Knuckles-Team/scion-sdk) — the unified AGI Harness.
 
 ## Description
 
@@ -9,7 +9,7 @@
 `{FRESHRSS_URL}/api/greader.php`). It exposes two action-routed MCP tool domains —
 `freshrss_reader` (stream contents, item bodies, unread counts) and
 `freshrss_subscriptions` (subscribe/unsubscribe/label feeds, browse categories,
-`stream_contents` action is consumed directly by the agent-connector-sdk Knowledge
+`stream_contents` action is consumed directly by the scion-sdk Knowledge
 Graph connector preset to ingest feed items.
 
 ## Architecture
@@ -27,6 +27,6 @@ This project implements or inherits the following ecosystem concepts:
 
 | Concept ID | Description | Source |
 |:-----------|:------------|:-------|
-| ECO-4.1 | MCP & Universal Skills | `agent-connector-sdk` (inherited) |
+| ECO-4.1 | MCP & Universal Skills | `scion-sdk` (inherited) |
 
-> 📖 **Full Registry**: See [`agent-connector-sdk/docs/overview.md`](https://github.com/Knuckles-Team/agent-connector-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.
+> 📖 **Full Registry**: See [`scion-sdk/docs/overview.md`](https://github.com/Knuckles-Team/scion-sdk/blob/main/docs/overview.md) for the complete 5-Pillar concept index.

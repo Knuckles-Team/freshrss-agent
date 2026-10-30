@@ -2,7 +2,7 @@
 
 Data-only subpackage: it carries ``feed.ttl`` (the ``owl:Ontology``
 ``http://knuckles.team/kg/feed`` module — feed sources, RSS feeds, feed items
-and their relationships) which the agent-connector-sdk hub federates in via the
-``agent_connector_sdk.ontology_providers`` entry-point. It holds no business logic
+and their relationships) which the scion-sdk hub federates in via the
+``scion_sdk.ontology_providers`` entry-point. It holds no business logic
 and no heavy imports so the hub can resolve it cheaply.
 """
