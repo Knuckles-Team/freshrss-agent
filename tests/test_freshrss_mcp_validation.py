@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from agent_connector_sdk.connector import build_server
+from scion_sdk.connector import build_server
 
 CONNECTORS = Path(__file__).resolve().parents[1] / "freshrss_agent" / "connectors"
 

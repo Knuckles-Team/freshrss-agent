@@ -90,8 +90,8 @@ def test_delegation_path_never_passes_verify_kwarg():
     """The OIDC delegation path must call ``get_delegated_token`` without a
     ``verify=`` kwarg (it does not accept one) and must construct the client
     with a resolved TLS profile, never a bare boolean."""
-    from agent_connector_sdk.auth.delegation import DelegationSettings
-    from agent_connector_sdk.auth.tokens import AccessToken
+    from scion_sdk.auth.delegation import DelegationSettings
+    from scion_sdk.auth.tokens import AccessToken
 
     auth_module._client = None
     fake_settings = DelegationSettings(
@@ -107,15 +107,15 @@ def test_delegation_path_never_passes_verify_kwarg():
         clear=True,
     ):
         with patch(
-            "agent_connector_sdk.auth.delegation.DelegationSettings.from_settings",
+            "scion_sdk.auth.delegation.DelegationSettings.from_settings",
             return_value=fake_settings,
         ):
             with patch(
-                "agent_connector_sdk.auth.delegation.current_user_token",
+                "scion_sdk.auth.delegation.current_user_token",
                 return_value="caller-token",
             ):
                 with patch(
-                    "agent_connector_sdk.auth.delegation.exchange_token",
+                    "scion_sdk.auth.delegation.exchange_token",
                     return_value=AccessToken(
                         value="delegated-token", ttl_seconds=300, expires_at=0.0
                     ),

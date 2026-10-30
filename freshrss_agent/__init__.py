@@ -52,7 +52,7 @@ for module_name, extra_name in OPTIONAL_MODULES.items():
 
 __all__.extend(["_MCP_AVAILABLE", "_AGENT_AVAILABLE"])
 
-from agent_connector_sdk.connector import Connector
+from scion_sdk.connector import Connector
 
 from freshrss_agent.api import ApiClientSystem
 from freshrss_agent.auth import get_client

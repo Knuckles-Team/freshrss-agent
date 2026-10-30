@@ -2,7 +2,7 @@
 
 Exercises the real ``ingest_entities`` / ``ingest_documents`` seam plus the FreshRSS
 domain mappers against a fake transport boundary (no engine required), letting the
-SDK's own ``agent_connector_sdk.ingest`` request builder run on top of it.
+SDK's own ``scion_sdk.ingest`` request builder run on top of it.
 ``freshrss_agent.kg_ingest`` is a **best-effort** surface (its MCP tools must never
 raise when the KG stack is down), so it converts an unreachable engine
 (``IngestUnavailableError``) or a malformed record (``IngestError``) into ``None``
@@ -16,7 +16,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from agent_connector_sdk.ingest import KnowledgeIngest
+from scion_sdk.ingest import KnowledgeIngest
 
 from freshrss_agent.kg_ingest import (
     ingest_documents,
@@ -120,7 +120,7 @@ async def test_ingest_feed_items_maps_to_documents(ingest):
     assert record.payload["title"] == "Big News"
     # `source_uri` is one of the PersistencePrivacyGuard `_LOCATION_FIELDS` and is
     # blanket-redacted at persistence time regardless of content — same behavior as
-    # the old agent_connector_sdk guard; the real URL survives on the non-reserved
+    # the old scion_sdk guard; the real URL survives on the non-reserved
     # `itemUrl` field the mapper also stamps.
     assert record.payload["source_uri"] == "[REDACTED_LOCATION]"
     assert record.payload["itemUrl"] == "https://example.com/a"

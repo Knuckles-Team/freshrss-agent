@@ -13,7 +13,7 @@ description: >-
 license: MIT
 tags: [freshrss, rss, greader, reader, feeds, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # FreshRSS Feed Reader

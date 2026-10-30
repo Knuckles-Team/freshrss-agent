@@ -17,7 +17,7 @@ pip install freshrss-agent
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`agent-connector-sdk`) |
+| `mcp` | `pip install "freshrss-agent[mcp]"` | FastMCP MCP-server runtime (`scion-sdk`) |
 | `all` | `pip install "freshrss-agent[all]"` | Everything above |
 
 ## From source

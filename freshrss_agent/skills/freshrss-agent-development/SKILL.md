@@ -10,7 +10,7 @@ license: MIT
 tags: [freshrss, rss, greader, development, connector, test, gates]
 tier: repository
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 
@@ -19,7 +19,7 @@ metadata:
 This repository owns the FreshRSS Google Reader API facade, authentication
 boundary, action-routed MCP tools, feed ontology and KG ingestion mappings, and
 packaged connector content. Shared connector contracts, transports, TLS
-profiles, and credential helpers belong to `agent-connector-sdk`; admission,
+profiles, and credential helpers belong to `scion-sdk`; admission,
 serving, and durable graph state belong to their owning repositories. Read
 `AGENTS.md` before changing code and keep credentials, private endpoints,
 tenant data, and customer records out of source, logs, fixtures, and skill
@@ -48,9 +48,9 @@ spec row in the commit trailer.
 - Preserve best-effort typed/document KG ingestion in
   `freshrss_agent/kg_ingest.py`, source declarations in
   `freshrss_agent/connector_sources.py`, and neutral ontology mappings. Do not
-  bypass the shared `agent_connector_sdk.ingest` facade.
+  bypass the shared `scion_sdk.ingest` facade.
 - Keep `skills/**`, `ontology/**`, prompts, and `mcp_config.json` coherent with
-  package data and the `agent_connector_sdk.connector` entry point
+  package data and the `scion_sdk.connector` entry point
   (`freshrss-mcp = "freshrss_agent:connector"`). Generated `specs/*/status.json`
   files come from shared hooks; never hand-edit them.
 - Every delivered requirement needs a bound focused test. This development
@@ -99,7 +99,7 @@ copy those hooks locally or bypass a failing check.
 
 ## Packaging and publication
 
-`pyproject.toml` declares the `agent_connector_sdk.connector` entry point
+`pyproject.toml` declares the `scion_sdk.connector` entry point
 `freshrss-mcp = "freshrss_agent:connector"` and packages `skills/**`,
 `ontology/**`, `connectors/**`, prompts, and `mcp_config.json`. When packaged
 content changes, inspect `uv build` output for
