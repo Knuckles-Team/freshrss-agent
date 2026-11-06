@@ -15,6 +15,26 @@ from scion_sdk.utilities import get_logger
 logger = get_logger(__name__)
 
 
+def _form_fields(data: Any | None) -> Any | None:
+    """Normalise form ``data`` for httpx, which rejects a list of key/value tuples.
+
+    GReader writes repeat keys (``i`` once per item id), so repeated keys become a
+    list value, which httpx encodes as repeated form fields.
+    """
+    if not isinstance(data, (list, tuple)):
+        return data
+    fields: dict[str, Any] = {}
+    for key, value in data:
+        if key in fields:
+            existing = fields[key]
+            fields[key] = (
+                [*existing, value] if isinstance(existing, list) else [existing, value]
+            )
+        else:
+            fields[key] = value
+    return fields
+
+
 class FreshRSSClientBase:
     """Base client for the FreshRSS Google Reader compatible API (GReader).
 
@@ -110,6 +130,7 @@ class FreshRSSClientBase:
         params = dict(params or {})
         params.setdefault("output", "json")
         url = self._greader_url(path)
+        data = _form_fields(data)
 
         def _send() -> httpx.Response:
             return self.session.request(
