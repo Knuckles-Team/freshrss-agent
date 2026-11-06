@@ -45,12 +45,19 @@ Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
 `MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface vs.
 the one-to-one verbose tools.
 
-## Tools & actions
-Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string**.
+## Tools
+One typed tool per operation. Parameters are passed as normal tool arguments.
 
-| Condensed tool | Actions |
-|----------------|---------|
-| `freshrss_subscriptions` | `list`, `categories`, `subscribe`, `unsubscribe`, `label`, `mark_read`, `star` |
+| Tool | Use |
+|------|-----|
+| `freshrss_subscription_list` | list feeds with their ids and categories |
+| `freshrss_categories` | list categories and tags |
+| `freshrss_subscribe` | subscribe to `feed_url` with optional `title` and `category`; a repeat returns `already_subscribed` |
+| `freshrss_unsubscribe` | remove a feed by URL or `feed/<n>` id; an unknown feed returns `not_subscribed` |
+| `freshrss_label` | add a category to a feed |
+
+FreshRSS fetches the feed before it answers, so a subscribe can take a minute. The client confirms the
+result against the subscription list. FreshRSS refuses feed URLs that resolve to private addresses (HTTP 400).
 
 ### Key parameters
 - `feed_url` — a feed URL, or a `feed/<url>` stream id (subscribe/unsubscribe/label).

@@ -23,15 +23,26 @@ def test_write_calls_encode_through_httpx(op):
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path.endswith("token"):
             return httpx.Response(200, text="WTOKEN")
+        if request.url.path.endswith("subscription/list"):
+            subscribed = op == "unsubscribe" or "body" in seen
+            subs = (
+                [{"id": "feed/7", "url": "http://example.org/feed.xml"}]
+                if subscribed
+                else []
+            )
+            return httpx.Response(200, json={"subscriptions": subs})
         seen["body"] = request.content.decode()
         return httpx.Response(200, text="OK")
 
-    client = FreshRSSApi(base_url="http://freshrss.local", username="a", api_password="p")
+    client = FreshRSSApi(
+        base_url="http://freshrss.local", username="a", api_password="p"
+    )
     client._auth_token = "TKN"
     client.session = httpx.Client(transport=httpx.MockTransport(handler))
     if op == "mark_read":
         client.mark_read(["i1", "i2"])
         assert seen["body"].count("i=") == 2
     else:
-        getattr(client, op)("http://example.org/feed.xml")
+        result = getattr(client, op)("http://example.org/feed.xml")
         assert "T=WTOKEN" in seen["body"]
+        assert result["status"] in {"subscribed", "unsubscribed"}

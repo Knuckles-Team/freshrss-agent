@@ -66,11 +66,10 @@ Ingest the whole subscription topology (no params):
 ## Gotchas
 - Ingestion is **best-effort**: a `null` `ingested` means no engine was reachable,
   not a failure — the listing still succeeds.
-- `freshrss_ingest_items` accepts the same params as `freshrss_reader`
-  `stream_contents`; page with `continuation` for a full sweep.
+- `freshrss_ingest_items` accepts the same params as `freshrss_stream_contents`; page with `continuation` for a full sweep.
 - Feed items land as `:Document` (type-forced) carrying `text`, `title`,
   `source_uri`, `published`, and the originating `feed_title`/`feed_stream_id`.
-- Fetching via `freshrss_reader` already auto-ingests items by default; call
+- Fetching via `freshrss_stream_contents` already auto-ingests items by default; call
   `freshrss_ingest_items` explicitly when you want an ingest without the read path,
   or `freshrss_ingest_subscriptions` for the feed topology.
 - `type` on every node matches a class federated by the package's `feed.ttl`

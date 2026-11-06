@@ -12,6 +12,7 @@
 @prefix schema: <http://schema.org/> .
 
 :RssFeed a owl:Class ;
+    rdfs:subClassOf :Concept ;
     rdfs:label "RSS Feed" ;
     rdfs:comment "CONCEPT:KG-2.121 — a FeedSource backed by a native RSS/Atom feed URL, ingested by the zero-infra rss connector (no external service required)." ;
     rdfs:subClassOf :FeedSource .
@@ -46,6 +47,7 @@
     rdfs:subClassOf :Document .
 
 :FeedSource a owl:Class ;
+    rdfs:subClassOf :Concept ;
     rdfs:label "Feed Source" ;
     rdfs:comment """CONCEPT:KG-2.122 — a registered, first-class feed (a native
     RSS/Atom URL, the FreshRSS aggregator, or a ScholarX arXiv category) the unified
@@ -54,6 +56,7 @@
     rdfs:subClassOf :DataConnector .
 
 :FeedSubscription a owl:Class ;
+    rdfs:subClassOf :Concept ;
     rdfs:label "Feed Subscription" ;
     rdfs:comment "CONCEPT:KG-2.122 — a FreshRSS GReader feed subscription (a feed/<url> stream the account follows), ingested natively by the freshrss-agent connector as a typed FeedSource node carrying its title and site URL." ;
     rdfs:seeAlso schema:DataFeed ;
