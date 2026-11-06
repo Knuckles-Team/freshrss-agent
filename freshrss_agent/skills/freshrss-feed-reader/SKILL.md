@@ -45,12 +45,16 @@ Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
 `MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface
 (used below) vs. the one-to-one verbose tools.
 
-## Tools & actions
-Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string**.
+## Tools
+One typed tool per operation. Parameters are passed as normal tool arguments.
 
-| Condensed tool | Actions |
-|----------------|---------|
-| `freshrss_reader` | `stream_contents`, `item_contents`, `unread_count` |
+| Tool | Use |
+|------|-----|
+| `freshrss_stream_contents` | items of a stream, with `continuation` for the next page |
+| `freshrss_item_contents` | full bodies for specific `item_ids` |
+| `freshrss_unread_count` | unread count per stream |
+| `freshrss_mark_read` | mark `item_ids` read |
+| `freshrss_star` | star or unstar one `item_id` |
 
 ### Key parameters (`stream_contents`)
 - `stream_id` — `user/-/state/com.google/reading-list` (all), `feed/<feedUrl>` (one

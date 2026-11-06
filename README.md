@@ -35,8 +35,8 @@ A connector for the self-hosted [FreshRSS](https://freshrss.org/) RSS reader,
 wrapping its **Google Reader compatible API** (GReader). It exposes two
 action-routed MCP tool domains:
 
-- **`freshrss_reader`** — `stream_contents` (feed items + continuation), `item_contents`, `unread_count`.
-- **`freshrss_subscriptions`** — `list`, `subscribe`, `unsubscribe`, `label`, `categories`, `mark_read`, `star`.
+- Reader tools: `freshrss_stream_contents`, `freshrss_item_contents`, `freshrss_unread_count`.
+- Subscription tools: `freshrss_subscription_list`, `freshrss_categories`, `freshrss_subscribe`, `freshrss_unsubscribe`, `freshrss_label`, `freshrss_mark_read`, `freshrss_star`.
 
 This repository is actively maintained - Contributions are welcome!
 
@@ -322,31 +322,7 @@ copy-paste `mcp_config.json` for all four transports — **stdio**, **streamable
 
 ## Usage
 
-Once configured, an LLM (or a direct caller) invokes a tool domain with an `action`
-and a JSON `params_json` payload. Examples:
-
-```jsonc
-// Fetch the 50 most recent unread items, newest first
-{
-  "tool": "freshrss_reader",
-  "action": "stream_contents",
-  "params_json": "{\"count\": 50, \"order\": \"n\"}"
-}
-
-// Subscribe to a feed and file it under a category
-{
-  "tool": "freshrss_subscriptions",
-  "action": "subscribe",
-  "params_json": "{\"feed_url\": \"http://example.com/rss\", \"category\": \"News\"}"
-}
-
-// Mark items as read
-{
-  "tool": "freshrss_subscriptions",
-  "action": "mark_read",
-  "params_json": "{\"item_ids\": [\"tag:google.com,2005:reader/item/0001\"]}"
-}
-```
+Each operation is its own typed tool, for example `freshrss_stream_contents(count=50, order="n")`, `freshrss_subscribe(feed_url=..., category="News")` and `freshrss_mark_read(item_ids=[...])`.
 
 Invoking a tool with an unknown or omitted `action` returns the discovery payload
 listing every valid action for that domain.
