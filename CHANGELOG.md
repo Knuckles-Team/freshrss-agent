@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README Table of Contents, Key Features, Available MCP Tools table, Usage examples,
   expanded Installation, and a Documentation section linking the `docs/` material.
 
+### Fixed
+- GReader write calls (subscribe, unsubscribe, label, mark_read, star) raised `TypeError` because httpx rejects list-of-tuples form data; fields are now normalised.
+
 ## [0.1.0] - 2026-06-18
 
 ### Added
