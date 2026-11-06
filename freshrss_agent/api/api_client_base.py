@@ -27,7 +27,9 @@ def _form_fields(data: Any | None) -> Any | None:
     for key, value in data:
         if key in fields:
             existing = fields[key]
-            fields[key] = [*existing, value] if isinstance(existing, list) else [existing, value]
+            fields[key] = (
+                [*existing, value] if isinstance(existing, list) else [existing, value]
+            )
         else:
             fields[key] = value
     return fields
