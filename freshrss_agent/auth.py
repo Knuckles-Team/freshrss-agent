@@ -18,7 +18,7 @@ import logging
 
 from scion_sdk.config import setting
 from scion_sdk.exceptions import AuthError, UnauthorizedError
-from scion_sdk.http.client import create_http_client
+from scion_sdk.http.client import build_http_client
 from scion_sdk.http.options import HttpClientOptions
 from scion_sdk.tls.profile import ResolvedTLSProfile
 from scion_sdk.tls.resolve import resolve_tls_profile
@@ -69,7 +69,7 @@ def get_client(
             subject_token = current_user_token()
             if not subject_token:
                 raise AuthError("no verified caller token to delegate")
-            with create_http_client(
+            with build_http_client(
                 HttpClientOptions(
                     base_url=delegation_settings.token_endpoint, tls=tls_profile
                 )

@@ -1,4 +1,4 @@
-"""Native epistemic-graph ingestion — Wire-First coverage.
+"""Native medulla ingestion — Wire-First coverage.
 
 Exercises the real ``ingest_entities`` / ``ingest_documents`` seam plus the FreshRSS
 domain mappers against a fake transport boundary (no engine required), letting the
