@@ -1,7 +1,7 @@
-"""Native epistemic-graph ingestion for FreshRSS records.
+"""Native medulla ingestion for FreshRSS records.
 
 CONCEPT:AU-KG.ingest.enterprise-source-extractor. The freshrss-agent connector
-natively pushes its data into the ONE epistemic-graph knowledge graph in the two
+natively pushes its data into the ONE medulla knowledge graph in the two
 modalities that apply to a feed reader:
 
 * **documents** — feed items (stream-contents entries) → ``:Document`` nodes carrying
@@ -89,7 +89,7 @@ async def ingest_entities(
     *,
     ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int] | None:
-    """Write typed OWL nodes (+ edges) into epistemic-graph. Best-effort, never raises.
+    """Write typed OWL nodes (+ edges) into medulla. Best-effort, never raises.
 
     ``entities``: ``[{"id":..., "node_type":<owl:Class>, ...props}]``.
     ``relationships``: ``[{"source":id, "target":id, "relationship":<link>}]``.

@@ -2,7 +2,7 @@
 name: freshrss-knowledge-ingestion
 skill_type: skill
 description: >-
-  Natively ingest FreshRSS data into the epistemic-graph knowledge graph via the
+  Natively ingest FreshRSS data into the medulla knowledge graph via the
   freshrss-agent MCP server — push feed items as searchable :Document nodes
   (title + body + source_uri) and subscriptions as typed :FeedSubscription nodes
   with their :FeedCategory folders and :inCategory links. Use when the agent must
@@ -17,7 +17,7 @@ metadata:
 ---
 # FreshRSS Knowledge Ingestion
 
-Push FreshRSS content into the ONE epistemic-graph knowledge graph so feed items
+Push FreshRSS content into the ONE medulla knowledge graph so feed items
 become semantically searchable documents and feeds become typed, linkable nodes.
 Ingestion is best-effort and engine-guarded: with no reachable engine it cleanly
 no-ops (`ingested: null`) and the fetch still returns.
@@ -33,7 +33,7 @@ no-ops (`ingested: null`) and the fetch still returns.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
-A reachable epistemic-graph engine is required for a non-null result.
+A reachable medulla engine is required for a non-null result.
 
 | Variable | Required | Notes |
 |----------|----------|-------|

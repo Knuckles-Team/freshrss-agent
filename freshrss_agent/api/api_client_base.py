@@ -6,7 +6,7 @@ from typing import Any
 
 import httpx
 from scion_sdk.exceptions import AuthError, UnauthorizedError
-from scion_sdk.http.client import create_http_client
+from scion_sdk.http.client import build_http_client
 from scion_sdk.http.options import HttpClientOptions
 from scion_sdk.tls.profile import ResolvedTLSProfile
 from scion_sdk.tls.resolve import resolve_tls_profile
@@ -57,7 +57,7 @@ class FreshRSSClientBase:
         self.username = username or ""
         self.api_password = api_password or ""
         self.tls_profile = tls_profile or resolve_tls_profile("freshrss")
-        self.session = create_http_client(
+        self.session = build_http_client(
             HttpClientOptions(
                 base_url=self.base_url,
                 tls=self.tls_profile,

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Wire-First MCP tools: native ingestion of FreshRSS records into epistemic-graph."""
+"""Wire-First MCP tools: native ingestion of FreshRSS records into medulla."""
 
 import json
 
@@ -24,7 +24,7 @@ def register_ingest_tools(mcp: FastMCP):
         client=Depends(get_client),
         ctx: Context | None = None,
     ) -> dict:
-        """Natively ingest FreshRSS feed items into epistemic-graph as :Document nodes.
+        """Natively ingest FreshRSS feed items into medulla as :Document nodes.
 
         Fetches a stream via the GReader API and pushes the items (title + body +
         source_uri + originating feed) into the knowledge graph via the fast engine
@@ -54,7 +54,7 @@ def register_ingest_tools(mcp: FastMCP):
         client=Depends(get_client),
         ctx: Context | None = None,
     ) -> dict:
-        """Natively ingest FreshRSS subscriptions into epistemic-graph as typed nodes.
+        """Natively ingest FreshRSS subscriptions into medulla as typed nodes.
 
         Lists feed subscriptions via the GReader API and pushes them as
         :FeedSubscription nodes with their :FeedCategory folders and :inCategory

@@ -58,7 +58,7 @@ class ReaderMixin:
                 if isinstance(canonical, list) and canonical:
                     item["url"] = canonical[0].get("href", "")
             # Native, default-on maximum ingestion: push fetched items into the
-            # epistemic-graph as :Document nodes. Best-effort — never breaks a fetch
+            # medulla as :Document nodes. Best-effort — never breaks a fetch
             # (guarded, no-ops with no engine; gate via FRESHRSS_KG_AUTO_INGEST).
             try:
                 from ..kg_ingest import maybe_ingest_items

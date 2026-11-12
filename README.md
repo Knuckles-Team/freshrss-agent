@@ -59,7 +59,7 @@ This repository is actively maintained - Contributions are welcome!
 > **Install the slim `[mcp]` extra.** All MCP examples below install
 > `freshrss-agent[mcp]` — the MCP-server extra that pulls only the FastMCP /
 > FastAPI tooling (`scion-sdk`). It deliberately **excludes** the heavy
-> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> agent runtime (the medulla engine, `pydantic-ai`, `dspy`, `llama-index`,
 > `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
 > (see [Installation](#installation)).
 
@@ -73,8 +73,8 @@ _Auto-generated from the live MCP server — do not edit by hand._
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
-| `freshrss_ingest_items` | `INGESTTOOL` | Natively ingest FreshRSS feed items into epistemic-graph as :Document nodes. |
-| `freshrss_ingest_subscriptions` | `INGESTTOOL` | Natively ingest FreshRSS subscriptions into epistemic-graph as typed nodes. |
+| `freshrss_ingest_items` | `INGESTTOOL` | Natively ingest FreshRSS feed items into medulla as :Document nodes. |
+| `freshrss_ingest_subscriptions` | `INGESTTOOL` | Natively ingest FreshRSS subscriptions into medulla as typed nodes. |
 | `freshrss_reader` | `READERTOOL` | Read FreshRSS streams via the Google Reader API. CONCEPT:FR-OS.identity.frss |
 | `freshrss_subscriptions` | `SUBSCRIPTIONSTOOL` | Curate FreshRSS feeds, categories and item tags. CONCEPT:FR-OS.governance.frss |
 
@@ -195,7 +195,7 @@ Every variable the server reads. A copy-paste template lives in [`.env.example`]
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `freshrss-agent[mcp]` to add
 > FastMCP / FastAPI through `scion-sdk`; the required Scion SDK core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
+> still carries `medulla[full]`. The `[agent-runtime]` extra additionally
 > enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
@@ -362,13 +362,13 @@ One multi-stage `docker/Dockerfile` builds the MCP-only image (`--target mcp`):
 
 agent (`:2.3.4`) with a co-located `:mcp` sidecar.
 
-### Knowledge-graph database (`epistemic-graph`)
+### Knowledge-graph database (`medulla`)
 
 transitively via `scion-sdk`). For production — or to share one knowledge graph
-across multiple agents — run **epistemic-graph as its own database container** and point the
+across multiple agents — run **medulla as its own database container** and point the
 agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
 config, and the full database architecture (with diagrams) are documented in the
-[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+[medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 The slim `[mcp]` server does **not** require the database.
 
 ## Documentation
