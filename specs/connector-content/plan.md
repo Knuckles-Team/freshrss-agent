@@ -53,6 +53,7 @@ The repository pre-commit hooks apply: `ruff-format`, `connector-standard`, `sec
 ## Production caller chain
 
 1. `CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT-R001`: the `freshrss-mcp` console script (pyproject.toml) loads the `scion_sdk.connector` entry point `freshrss_agent:connector` -> freshrss_agent/__init__.py::connector (a Connector with no content= argument) -> the SDK default content registration serves skill://, ontology:// and prompts.
+2. `CONN-FRESHRSS-AGENT-CONNECTOR-CONTENT-R002`: the ontology loader reads `freshrss_agent/ontology/` at server start; the engine imports the served pack and finds no redeclared core term.
 
 ## Cross-repo seams
 
