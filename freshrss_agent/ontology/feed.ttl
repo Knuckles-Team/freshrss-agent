@@ -16,20 +16,20 @@
     rdfs:subClassOf core:Concept ;
     rdfs:label "RSS Feed" ;
     rdfs:comment "CONCEPT:KG-2.121 — a FeedSource backed by a native RSS/Atom feed URL, ingested by the zero-infra rss connector (no external service required)." ;
-    rdfs:subClassOf :FeedSource .
+    rdfs:subClassOf core:FeedSource .
 
 :ingestedFrom a owl:ObjectProperty ;
     rdfs:label "ingested from" ;
     rdfs:comment "CONCEPT:KG-2.122 — provenance: the FeedSource an item was ingested from (the INGESTED_FROM edge written on the live sweep path)." ;
-    rdfs:domain :FeedItem ;
-    rdfs:range :FeedSource ;
+    rdfs:domain core:FeedItem ;
+    rdfs:range core:FeedSource ;
     rdfs:seeAlso prov:wasDerivedFrom .
 
 :publishesItem a owl:ObjectProperty ;
     rdfs:label "publishes item" ;
     rdfs:comment "CONCEPT:KG-2.122 — a FeedSource PUBLISHES the items ingested from it." ;
-    rdfs:domain :FeedSource ;
-    rdfs:range :FeedItem ;
+    rdfs:domain core:FeedSource ;
+    rdfs:range core:FeedItem ;
     owl:inverseOf :itemFrom .
 
 <https://knuckles-team.github.io/ontology/connector/feed> a owl:Ontology ;
@@ -38,30 +38,8 @@
 
 :itemFrom a owl:ObjectProperty ;
     rdfs:label "item from" ;
-    rdfs:domain :FeedItem ;
-    rdfs:range :FeedSource .
-
-:FeedItem a owl:Class ;
-    rdfs:label "Feed Item" ;
-    rdfs:comment "CONCEPT:KG-2.122 — one entry ingested from a FeedSource (a Document specialization), carrying provenance back to the source it came from." ;
-    rdfs:seeAlso schema:Article ;
-    rdfs:subClassOf core:Document .
-
-:FeedSource a owl:Class ;
-    rdfs:subClassOf core:Concept ;
-    rdfs:label "Feed Source" ;
-    rdfs:comment """CONCEPT:KG-2.122 — a registered, first-class feed (a native
-    RSS/Atom URL, the FreshRSS aggregator, or a ScholarX arXiv category) the unified
-    feed pipeline ingests through the one world-model gate. The long-missing
-    presets→KG materialization: a feed is a KG node, not just config.""" ;
-    rdfs:subClassOf core:SourceBackend .
-
-:FeedSubscription a owl:Class ;
-    rdfs:subClassOf core:Concept ;
-    rdfs:label "Feed Subscription" ;
-    rdfs:comment "CONCEPT:KG-2.122 — a FreshRSS GReader feed subscription (a feed/<url> stream the account follows), ingested natively by the freshrss-agent connector as a typed FeedSource node carrying its title and site URL." ;
-    rdfs:seeAlso schema:DataFeed ;
-    rdfs:subClassOf :FeedSource .
+    rdfs:domain core:FeedItem ;
+    rdfs:range core:FeedSource .
 
 :FeedCategory a owl:Class ;
     rdfs:label "Feed Category" ;
@@ -71,7 +49,7 @@
 :inCategory a owl:ObjectProperty ;
     rdfs:label "in category" ;
     rdfs:comment "CONCEPT:KG-2.122 — the FeedCategory a FeedSubscription is filed under (the IN_CATEGORY edge written by the freshrss-agent native ingest)." ;
-    rdfs:domain :FeedSubscription ;
+    rdfs:domain core:FeedSubscription ;
     rdfs:range :FeedCategory .
 
 # ontology-codemod R3
