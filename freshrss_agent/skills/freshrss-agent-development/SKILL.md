@@ -25,6 +25,22 @@ serving, and durable graph state belong to their owning repositories. Read
 tenant data, and customer records out of source, logs, fixtures, and skill
 content.
 
+## Steps
+
+1. Find the owning spec row with `git grep -n "<term>" -- specs`, and verify it exists before editing so the commit can cite it.
+2. Make the smallest change inside the existing `Connector`, `freshrss_agent/api_client.py` and `freshrss_agent/mcp/` modules, and verify with `git diff --stat` that only intended files changed.
+3. Run focused mocked tests with `uv run --locked --extra test pytest -q tests/test_api_wrapper.py tests/test_auth.py`, and verify they pass without a live FreshRSS instance.
+4. Run the shared gates with `uvx pre-commit run --all-files`, and verify every hook reports Passed.
+5. When packaged content changed, run `uv build` and verify the output lists `freshrss_agent/skills/freshrss-agent-development/SKILL.md`.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---------|-------|----------|
+| Test tries a live HTTP call | HTTP response not mocked | Mock the GReader response in the test, since gates never call a live instance |
+| Hook rewrites `specs/*/status.json` or fails on it | Status file edited by hand | Revert the hand edit with `git checkout -- <path>`, since shared hooks generate status |
+| `uv sync --locked` fails | `uv.lock` out of step with `pyproject.toml` | Refresh the lock with `uv lock` and keep version and lock entry coherent |
+
 ## Rapid delivery: the 5-minute contract
 
 Specs are already designed. Deliver small, reviewable slices and cite the owning

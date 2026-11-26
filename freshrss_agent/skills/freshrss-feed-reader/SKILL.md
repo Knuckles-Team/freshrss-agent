@@ -2,14 +2,7 @@
 name: freshrss-feed-reader
 skill_type: skill
 description: >-
-  Read FreshRSS streams over the Google Reader (GReader) API via the
-  freshrss-agent MCP server — fetch stream contents for the reading-list, a
-  single feed, or a category label, page through with a continuation cursor,
-  pull full item bodies, and check per-stream unread counts. Use when the agent
-  must triage what is new, fetch article bodies, or take a delta since a
-  watermark. Do NOT use to subscribe/label/star feeds (use
-  freshrss-subscription-management) or to push items into the knowledge graph
-  (use freshrss-knowledge-ingestion).
+  Read FreshRSS streams over the Google Reader (GReader) API via the freshrss-agent MCP server — fetch stream contents for the reading-list, a single feed, or a category label, page through with a continuation cursor, pull full item bodies, and check per-stream unread counts. Use when the agent must triage what is new, fetch article bodies, or take a delta since a watermark.
 license: MIT
 tags: [freshrss, rss, greader, reader, feeds, mcp]
 metadata:
@@ -17,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # FreshRSS Feed Reader
+
+Scope: Read FreshRSS streams over the Google Reader (GReader) API via the freshrss-agent MCP server — fetch stream contents for the reading-list, a single feed, or a category label, page through with a continuation cursor, pull full item bodies, and check per-stream unread counts. Use when the agent must triage what is new, fetch article bodies, or take a delta since a watermark. Do NOT use to subscribe/label/star feeds (use freshrss-subscription-management) or to push items into the knowledge graph (use freshrss-knowledge-ingestion).
 
 Read-side access to FreshRSS through the Google Reader compatible API. Prefer
 these tools over raw HTTP — they normalize each item to a flat, transport-safe
@@ -44,6 +39,22 @@ Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
 
 `MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface
 (used below) vs. the one-to-one verbose tools.
+
+## Steps
+
+1. Check connectivity with `freshrss_unread_count`, and verify it returns per-stream counts rather than an auth error.
+2. Fetch a page with `freshrss_stream_contents`(`stream_id`, `count`, `order`, optionally `newer_than`), and verify the response has an `items` list.
+3. Page through with `freshrss_stream_contents`(`continuation`) while the response includes `continuation`, and verify the loop stops when it is absent.
+4. Pull full bodies with `freshrss_item_contents`(`item_ids`) for chosen items, and verify each result carries `text` and `url`.
+5. Only when asked, call `freshrss_mark_read`(`item_ids`) or `freshrss_star`(`item_id`, `starred`), and verify the next `freshrss_unread_count` reflects the change.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---------|-------|----------|
+| Authentication error | `FRESHRSS_URL`, `FRESHRSS_USER` or `FRESHRSS_API_PASSWORD` missing or wrong | Set all three, using the GReader API password from Settings, Profile, API |
+| Empty `items` | `newer_than` given in milliseconds or an unknown `stream_id` | Pass unix seconds and use `user/-/state/com.google/reading-list`, `feed/<feedUrl>` or `user/-/label/<category>` |
+| Tool rejects the call | `params_json` sent as an object | Serialize `params_json` as a JSON string |
 
 ## Tools
 One typed tool per operation. Parameters are passed as normal tool arguments.
