@@ -2,13 +2,7 @@
 name: freshrss-subscription-management
 skill_type: skill
 description: >-
-  Curate FreshRSS feeds, categories, and item tags over the Google Reader
-  (GReader) API via the freshrss-agent MCP server — list subscriptions and
-  categories, subscribe/unsubscribe to feeds, label a feed into a category, and
-  tag items (mark-read / star). Use when the agent must manage which feeds are
-  followed, organize them into folders, or change item read/starred state. Do
-  NOT use to read stream contents or item bodies (use freshrss-feed-reader) or
-  to push feeds into the knowledge graph (use freshrss-knowledge-ingestion).
+  Curate FreshRSS feeds, categories, and item tags over the Google Reader (GReader) API via the freshrss-agent MCP server — list subscriptions and categories, subscribe/unsubscribe to feeds, label a feed into a category, and tag items (mark-read / star). Use when the agent must manage which feeds are followed, organize them into folders, or change item read/starred state.
 license: MIT
 tags: [freshrss, rss, greader, subscriptions, curation, mcp]
 metadata:
@@ -16,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # FreshRSS Subscription Management
+
+Scope: Curate FreshRSS feeds, categories, and item tags over the Google Reader (GReader) API via the freshrss-agent MCP server — list subscriptions and categories, subscribe/unsubscribe to feeds, label a feed into a category, and tag items (mark-read / star). Use when the agent must manage which feeds are followed, organize them into folders, or change item read/starred state. Do NOT use to read stream contents or item bodies (use freshrss-feed-reader) or to push feeds into the knowledge graph (use freshrss-knowledge-ingestion).
 
 Write-side curation of FreshRSS through the Google Reader compatible API. These
 tools transparently fetch the short-lived GReader POST token required by write
@@ -44,6 +40,22 @@ Connect via the `mcp-client` skill against the **`freshrss-agent`** MCP server.
 
 `MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed surface vs.
 the one-to-one verbose tools.
+
+## Steps
+
+1. Inspect current state with `freshrss_subscription_list` and `freshrss_categories`, and verify the feed or category you will change appears or is absent as expected.
+2. Subscribe with `freshrss_subscribe`(`feed_url`, optionally `title`, `category`), and verify the result is a subscription or `already_subscribed`.
+3. Move a feed with `freshrss_label`(`feed_url`, `category`) using the bare category name, and verify with `freshrss_subscription_list` that the category changed.
+4. Remove a feed only when asked: call `freshrss_unsubscribe`(`feed_url`), and verify the feed no longer appears in `freshrss_subscription_list`.
+5. Change item state with `freshrss_mark_read`(`item_ids`) or `freshrss_star`(`item_id`, `starred`), and verify the call reports success.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---------|-------|----------|
+| Subscribe fails with HTTP 400 | FreshRSS refuses feed URLs resolving to private addresses | Use a publicly resolvable `feed_url` |
+| Result `not_subscribed` | Unknown feed on unsubscribe | List with `freshrss_subscription_list` and pass the exact URL or `feed/<n>` id |
+| Authentication error | `FRESHRSS_URL`, `FRESHRSS_USER` or `FRESHRSS_API_PASSWORD` missing or wrong | Set all three variables and call `freshrss_subscription_list` to confirm access |
 
 ## Tools
 One typed tool per operation. Parameters are passed as normal tool arguments.
