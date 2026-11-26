@@ -5,27 +5,24 @@
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/freshrss-agent)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/freshrss-agent)
+![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/freshrss-agent)
+![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/freshrss-agent)
 ![PyPI - License](https://img.shields.io/pypi/l/freshrss-agent)
+![GitHub](https://img.shields.io/github/license/Knuckles-Team/freshrss-agent)
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/freshrss-agent)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/freshrss-agent)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/freshrss-agent)
+![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/freshrss-agent)
+![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/freshrss-agent)
+![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/freshrss-agent)
+![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/freshrss-agent)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/freshrss-agent)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/freshrss-agent)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/freshrss-agent)
 
-> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> backing platform are maintained in the
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
 > [official documentation](https://knuckles-team.github.io/freshrss-agent/).
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [MCP](#mcp)
-  - [Available MCP Tools](#available-mcp-tools)
-  - [Environment Variables](#environment-variables)
-  - [Transport Configuration Examples](#stdio-transport-local-ides--cursor-claude-desktop-vs-code)
-  - [Additional Deployment Options](#additional-deployment-options)
-- [Usage](#usage)
-- [Installation](#installation)
-- [Documentation](#documentation)
 
 ---
 
@@ -320,12 +317,16 @@ copy-paste `mcp_config.json` for all four transports — **stdio**, **streamable
   `https://freshrss-mcp.example.invalid/mcp` using the `"url"` key.
 <!-- END GENERATED: additional-deployment-options -->
 
+---
+
 ## Usage
 
 Each operation is its own typed tool, for example `freshrss_stream_contents(count=50, order="n")`, `freshrss_subscribe(feed_url=..., category="News")` and `freshrss_mark_read(item_ids=[...])`.
 
 Invoking a tool with an unknown or omitted `action` returns the discovery payload
 listing every valid action for that domain.
+
+---
 
 ## Installation
 
@@ -371,6 +372,8 @@ config, and the full database architecture (with diagrams) are documented in the
 [medulla deployment guide](https://knuckles-team.github.io/medulla/deployment/).
 The slim `[mcp]` server does **not** require the database.
 
+---
+
 ## Documentation
 
 Full installation, deployment, usage, and platform-provisioning guides live in the
@@ -380,6 +383,25 @@ Full installation, deployment, usage, and platform-provisioning guides live in t
 - [Overview](docs/overview.md) · [Installation](docs/installation.md) ·
   [Usage](docs/usage.md) · [Deployment](docs/deployment.md) ·
   [Platform](docs/platform.md) · [Concepts](docs/concepts.md)
+
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
+
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
+- Format code using `ruff format .`
+- Lint code using `ruff check .`
+- Validate type-safety with `mypy .`
+- Run test suites using `pytest`
 
 <!-- BEGIN agent-os-genesis-deploy (generated; do not edit between markers) -->
 
